@@ -3,17 +3,19 @@
 // This will be the main server file (aka: server.js / app.js)
 
 // Declare app dependencies.
+require('dotenv').config();
 const express = require('express');
-const pg = require('pg');
 const superagent = require('superagent');
 const methodOverride = require('method-override');
-require('dotenv').config();
+const pg = require('pg');
 require('ejs');
-const PORT = process.env.PORT||3001;
 
+// Declare lib dependencies.
+const user = require('./lib/user');
 
 // Declare app configs.
 const app = express();
+const PORT = process.env.PORT || 8081;
 const client = new pg.Client(process.env.DATABASE_URL);
 
 // Declare app middleware.
@@ -22,25 +24,43 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./public'));
 app.use(methodOverride('_method'));
 
-app.get("/", (request,response) => {
+// Declare routes.
+app.get('/', (request, response) => {
   response.status(200).render('./index');
 })
+app.post('/login', logInUser);
+app.get('*', notFoundHandler);
 
 /////// ERROR FUNCTIONS /////////
+function logInUser(req, res) {
+  let loginResults = {
+    username: req.body.username,
+    password: req.body.password
+  }
+  let SQL = 'SELECT * FROM users WHERE username = $1 AND password = crypt($2, password);';
+  let safeValues = [loginResults.username, loginResults.password];
+  client.query(SQL, safeValues)
+    .then(result => {
+      if (result.rowCount === 1) {
+        user.username = result.rows[0].username;
+        console.log(user.username);
+      }
+    })
+    .catch(err => console.error(err));
+}
 
-function notFoundHandler(request, response){
+function notFoundHandler(request, response) {
   response.status(404).send('This route does not exist');
 }
 
-function errorHandler(error, request, response){
+function errorHandler(error, request, response) {
   console.log('Error', error);
   response.status(500).send(error);
 }
 
-//connect with client
+// Assign app to connect to database and then listen on PORT.
 client.connect()
-  .then(() => {
-    app.listen(PORT, ()=> (console.log(`JumpStart_Delete are chatting on ${PORT}`)));
-  })
-  .catch(err => console.log('we have problem Houston', err));
-
+  .then(
+    app.listen(PORT, () => console.log(`Listening on port: ${PORT}`))
+  )
+  .catch(err => console.error(err))
