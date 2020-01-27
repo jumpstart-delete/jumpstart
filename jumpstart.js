@@ -9,6 +9,8 @@ const superagent = require('superagent');
 const methodOverride = require('method-override');
 require('dotenv').config();
 require('ejs');
+const PORT = process.env.PORT||3001;
+
 
 // Declare app configs.
 const app = express();
@@ -19,3 +21,26 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./public'));
 app.use(methodOverride('_method'));
+
+app.get("/", (request,response) => {
+  response.status(200).render('./index');
+})
+
+/////// ERROR FUNCTIONS /////////
+
+function notFoundHandler(request, response){
+  response.status(404).send('This route does not exist');
+}
+
+function errorHandler(error, request, response){
+  console.log('Error', error);
+  response.status(500).send(error);
+}
+
+//connect with client
+client.connect()
+  .then(() => {
+    app.listen(PORT, ()=> (console.log(`JumpStart_Delete are chatting on ${PORT}`)));
+  })
+  .catch(err => console.log('we have problem Houston', err));
+
