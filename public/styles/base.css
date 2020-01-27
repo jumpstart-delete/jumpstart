@@ -1,3 +1,14 @@
+*{
+  box-sizing: border-box;
+}
+
+header{
+  margin: 5px;
+}
+
 body{
   background-color: azure;
+  width: 480px;
+  margin:auto;
+  border: solid black 1px;
 }
