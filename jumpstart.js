@@ -25,6 +25,20 @@ app.use(express.static('./public'));
 app.use(methodOverride('_method'));
 
 // Declare routes.
+app.get("/", (request,response) => {
+  response.status(200).render('./index');
+})
+
+/////// ERROR FUNCTIONS /////////
+
+function notFoundHandler(request, response){
+  response.status(404).send('This route does not exist');
+}
+
+function errorHandler(error, request, response){
+  console.log('Error', error);
+  response.status(500).send(error);
+}
 
 // Assign app to connect to database and then listen on PORT.
 client.connect()
