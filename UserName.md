@@ -29,3 +29,25 @@ As a user, I want to be able to save my favorite jobsearches to my database, and
 ## User Story Six  
 
 As a user, I want to be able to update all of my favorite jobs to applied status, and delete jobs.      
+
+# Feature Task
+### All the features and acceptance Tests ###
+
+**CREATE GITHUB REPO**
+https://trello.com/c/GW8nfefL/10-create-github-repo
+
+**HOME PAGE: User Login username and password**
+https://trello.com/c/rPtCzA0c/4-home-page-user-login-username-and-password
+
+**HOME PAGE: SEARCH**
+https://trello.com/c/3JthRHxU/8-home-page-search
+
+**SEARCH/RESULTS: JOB RESULTS**
+https://trello.com/c/27xNEV3x/5-search-results-job-results
+
+**DETAILS PAGE: VIEW DETAILS OF JOB**
+https://trello.com/c/uucpvtyP/7-details-page-view-details-of-job
+
+
+**STATUS PAGE: UPDATE and DELETE**
+https://trello.com/c/vrsLdPXM/11-status-page-update-and-delete
