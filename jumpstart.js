@@ -31,6 +31,7 @@ app.get('/', (request, response) => {
 })
 app.post('/search', logInUser);
 app.post('/searches/new', displayResult);
+app.post('/searches/detail', displayDetail);
 
 
 app.get('*', notFoundHandler);
@@ -91,6 +92,13 @@ function displayResult (request, response) {
 
 }
 
+function displayDetail(request, response) {
+  let {title, location, company, summary, url, skill} = request.body
+
+  
+
+}
+
 // /////// constructor for azuna/////
 function AzunaJobsearchs(obj) {
   obj.title !== undefined ? this.title = obj.title : this.title = 'title is unavailable'
@@ -127,9 +135,6 @@ function Github(obj) {
 
   dataArr.push(this)
 }
-
-
-
 
 /////////////////// Error handler
 
