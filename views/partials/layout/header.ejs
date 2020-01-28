@@ -14,6 +14,7 @@
     </ul>
   </nav>
   <form action="/login" method="post">
+    <%- include('../login-fail') %>
     <fieldset>
       <label for="username"> username</label>
       <input type="text" name="username" placeholder="username">

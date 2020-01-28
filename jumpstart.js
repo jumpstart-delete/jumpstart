@@ -11,6 +11,7 @@ const pg = require('pg');
 require('ejs');
 
 // Declare lib dependencies.
+const flags = require('./lib/flags');
 const user = require('./lib/user');
 
 // Declare app configs.
@@ -47,6 +48,9 @@ function logInUser(req, res) {
       if (result.rowCount === 1) {
         user.username = result.rows[0].username;
         console.log(user.username);
+      } else {
+        flags.loginFail = true;
+        res.render('/', { loginFail: flags.loginFail })
       }
     })
     .catch(err => console.error(err));
