@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
+    <%- include('../partials/layout/head.ejs') %>
 <body>
-    
+    <%- include('../partials/layout/header.ejs') %>
+    <% data.forEach(datas => { %>
+    <h2><%- datas.title %></h2>
+    <p><%- datas.location %></p>
+    <p><%- datas.company %></p>
+    <p><a href="<%= datas.url %>">Link</a></p>
+    <p><%- datas.skill %></p>
+    <% }) %>
+    <script src="/js/app.js"></script>  
 </body>
+
 </html>
