@@ -73,7 +73,8 @@ function registerUser(req, res) {
       console.log(req.body)
       if (results.rowCount !== 0) {
         console.log('User already exists!');
-      } else {
+      } 
+      else {
         let newUserQuery = `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf', 8)));`;
         let newUserValues = [registerResults.username, registerResults.password];
         let newUserTable = `CREATE TABLE ${registerResults.username}_jobs
@@ -90,7 +91,10 @@ function registerUser(req, res) {
           .then(
             client.query(newUserTable)
               .then(results => {
-                console.log(results);
+                // console.log('this is just results', results);
+                user.username = registerResults.username;
+                console.log('this is user.username', user.username);
+                res.status(200).redirect('/search');
               })
           )
           .catch(err => console.error(err));
@@ -119,7 +123,7 @@ function displayResult (request, response) {
         return new AzunaJobsearchs(data)
       });
       response.status(200).render('./pages/results', {data: azunaData});
-    }) .catch(err => console.error(err))
+    }) .catch(err => console.error(err));
   // superagent.get(museUrl)
   //   .then(results => {
   //     let parseData = JSON.parse(results.text);
