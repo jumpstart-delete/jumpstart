@@ -99,10 +99,10 @@ function registerUser(req, res) {
 }
 
 function renderSearch(req, res) {
-  res.status(200).render('./pages/search', {username: user.username});
+  res.status(200).render('./pages/search', { username: user.username });
 }
 
-function displayResult (request, response) {
+function displayResult(request, response) {
 
   let city = request.body.location;
   let azunaKey = process.env.AZUNA_API_KEY;
@@ -118,8 +118,8 @@ function displayResult (request, response) {
       let azunaData = parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-      response.status(200).render('./pages/results', {data: azunaData});
-    }) .catch(err => console.error(err))
+      response.status(200).render('./pages/results', { data: azunaData });
+    }).catch(err => console.error(err))
   // superagent.get(museUrl)
   //   .then(results => {
   //     let parseData = JSON.parse(results.text);
@@ -139,9 +139,9 @@ function displayResult (request, response) {
 }
 
 function displayDetail(request, response) {
-  let {title, location, company, summary, url, skill} = request.body
+  let { title, location, company, summary, url, skill } = request.body
 
-  
+
 
 }
 
@@ -160,12 +160,12 @@ function AzunaJobsearchs(obj) {
 /////// constructor for Muse/////
 function Musejobsearch(obj) {
   obj.name !== undefined ? this.title = obj.name : this.title = 'title is unavailable'
-  obj.locations.length > 1 ? this.location = obj.locations.map(value => {return value.name}).join(', ') : this.location = obj.locations[0].name
+  obj.locations.length > 1 ? this.location = obj.locations.map(value => { return value.name }).join(', ') : this.location = obj.locations[0].name
   this.company = obj.company.name;
   this.summary = obj.contents;
   this.url = obj.refs.landing_page;
   obj.categories.name !== undefined ? this.skill = obj.categories[0].name : this.skill = 'not available';
-  
+
   dataArr.push(this)
 }
 
@@ -174,7 +174,7 @@ function Github(obj) {
   obj.name !== undefined ? this.title = obj.title : this.title = 'title is unavailable';
   obj.location !== undefined ? this.location = obj.location : this.location = 'not available';
   obj.company !== undefined ? this.company = obj.company : this.company = 'not available';
-  this.summary !== undefined ? this.summary = obj.description :'not available';
+  this.summary !== undefined ? this.summary = obj.description : 'not available';
   obj.url !== undefined ? this.url = obj.url :
     this.url = 'not available';
   this.skill = 'not available'
@@ -185,7 +185,7 @@ function Github(obj) {
 /////////////////// Error handler
 
 function notFoundHandler(request, response) {
-  response.status(404).send('This route does not exist');
+  response.status(404).render('./pages/404');
 }
 
 function errorHandler(error, request, response) {
