@@ -68,9 +68,10 @@ function displayResult (request, response) {
   superagent.get(azunaUrl)
     .then(results => {
       let parsedData = (JSON.parse(results.text))
-      return parsedData.results.map(data => {
+      let azunaData = parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
+      response.status(200).render('./pages/results', {data: azunaData});
     }) .catch(err => console.error(err))
   // superagent.get(museUrl)
   //   .then(results => {
@@ -88,8 +89,6 @@ function displayResult (request, response) {
   //     })
   //   }) .catch(err => console.error(err));
 
-
-  dataArr = [];
 }
 
 // /////// constructor for azuna/////

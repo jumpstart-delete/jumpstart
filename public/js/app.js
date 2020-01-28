@@ -1,8 +1,6 @@
 'use strict';
 
-// $.ajax('/searches/new', {method: 'GET', datatype: "JSON"})
-//   .then(data => {
-//     data.forEach(value => {
-//       console.log(value)
-//     }).catch(error => { throw error; });
-//   });
+$('#azunaButton').on('click', azunaButtons)
+function azunaButtons() {
+  console.log('you clicked')
+}
