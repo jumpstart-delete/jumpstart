@@ -2,7 +2,8 @@
 <html lang="en">
     <%- include('../partials/layout/head.ejs') %>
 <body>
-
+    <%- include('../partials/layout/header.ejs') %>
+    <% data.forEach(datas => { %>
     <section class="data-card">
     <h2><%- datas.title %></h2>
     <p><%- datas.location %></p>
@@ -17,7 +18,8 @@
         <button id='button' type='submit'>View in detail</button>
     </form>
     </section>
-
+    <% }) %>
+    
     <button id='azunaButton'>azuna</button>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/js/app.js"></script>  
