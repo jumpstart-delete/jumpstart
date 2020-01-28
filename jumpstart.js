@@ -139,13 +139,13 @@ function displayResult (request, response) {
   //       return new Github(value)
   //     })
   //   }) .catch(err => console.error(err));
-
 }
 
 function displayDetail(request, response) {
-  let {title, location, company, summary, url, skill} = request.body
-
-  
+  let detailData = request.body
+  console.log(detailData)
+  response.status(200).render('./pages/detail', {datas: detailData});
+  // let {title, location, company, summary, url, skill} = request.body
 
 }
 
@@ -158,7 +158,7 @@ function AzunaJobsearchs(obj) {
   this.url = obj.redirect_url;
   obj.category.label !== undefined ? this.skill = obj.category.label : this.skill = 'not available'
 
-  dataArr.push(this)
+  // dataArr.push(this)
 }
 
 /////// constructor for Muse/////
