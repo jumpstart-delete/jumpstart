@@ -29,6 +29,11 @@ app.get('/', (request, response) => {
   response.status(200).render('./index');
 })
 app.post('/login', logInUser);
+app.get('/search', displaySearch)
+app.post('/searches/new', displayResult)
+
+
+
 app.get('*', notFoundHandler);
 
 /////// ERROR FUNCTIONS /////////
@@ -43,11 +48,34 @@ function logInUser(req, res) {
     .then(result => {
       if (result.rowCount === 1) {
         user.username = result.rows[0].username;
-        console.log(user.username);
+        // console.log(user.username);
+        res.status(200).render('./pages/search', {username: user.username})
       }
     })
     .catch(err => console.error(err));
 }
+
+////////function to display the search
+
+function displaySearch(request, response) {
+  response.status(200).render('./pages/results')
+}
+
+function displayResult (request, response) {
+  let city = request.body.location;
+  let title = request.body.job_title;
+  let url = ` https://data.usajobs.gov/api/search`;
+
+  superagent.get(url)
+    .set()
+    .then(results => {
+      console.log(results);
+    }) .catch(err => console.error(err))
+
+}
+
+
+/////////////////// Error handler
 
 function notFoundHandler(request, response) {
   response.status(404).send('This route does not exist');
