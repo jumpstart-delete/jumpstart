@@ -38,7 +38,11 @@ app.post('/searches/new', displayResult);
 app.post('/searches/detail', displayDetail);
 app.get('*', notFoundHandler);
 
-/////// ERROR FUNCTIONS /////////
+/// entering into database from the view_details.ejs///
+app.post('/status', addJobToDb);
+
+
+/////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
   let loginResults = {
     username: req.body.username,
@@ -61,6 +65,8 @@ function logInUser(req, res) {
     .catch(err => console.error(err));
 }
 
+/////// REGISTER FUNCTIONS, ROUTED TO THE SEARCH PAGE /////////
+
 function registerUser(req, res) {
   let registerResults = {
     username: req.body.username,
@@ -73,7 +79,7 @@ function registerUser(req, res) {
       console.log(req.body)
       if (results.rowCount !== 0) {
         console.log('User already exists!');
-      } 
+      }
       else {
         let newUserQuery = `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf', 8)));`;
         let newUserValues = [registerResults.username, registerResults.password];
@@ -102,10 +108,12 @@ function registerUser(req, res) {
     })
 }
 
+////// RENDER SEARCH ON SEARCH PAGE///////
 function renderSearch(req, res) {
   res.status(200).render('./pages/search', {username: user.username});
 }
 
+///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE//////
 function displayResult (request, response) {
 
   let city = request.body.location;
@@ -141,6 +149,7 @@ function displayResult (request, response) {
   //   }) .catch(err => console.error(err));
 }
 
+///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
   console.log(detailData)
@@ -148,7 +157,25 @@ function displayDetail(request, response) {
   // let {title, location, company, summary, url, skill} = request.body
 
 }
+/////// ADDING JOB TO DATABASE/////
+function addJobToDb(request, response) {
+  console.log('this is request.body within the add job to database', request.body);
 
+  // deconstruct the input
+  let {title, location, summary, url, skill} = request.body;
+
+  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
+  let safeValues = [title, url, summary, location, skill];
+
+  return client.query(SQL1, safeValues)
+    .then(result => {
+      console.log('this is the result from the client query', result.rows[0].id);
+      response.redirect(`/status/${result.rows[0].id}`)
+    })
+    .catch(err => console.error(err));
+}
+
+//////////////////////// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
 // /////// constructor for azuna/////
 function AzunaJobsearchs(obj) {
   obj.title !== undefined ? this.title = obj.title : this.title = 'title is unavailable'
@@ -169,7 +196,7 @@ function Musejobsearch(obj) {
   this.summary = obj.contents;
   this.url = obj.refs.landing_page;
   obj.categories.name !== undefined ? this.skill = obj.categories[0].name : this.skill = 'not available';
-  
+
   dataArr.push(this)
 }
 
@@ -186,7 +213,7 @@ function Github(obj) {
   dataArr.push(this)
 }
 
-/////////////////// Error handler
+/////////////////// Error handler////////////////
 
 function notFoundHandler(request, response) {
   response.status(404).send('This route does not exist');
