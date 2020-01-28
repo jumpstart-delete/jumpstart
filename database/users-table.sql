@@ -5,3 +5,5 @@ CREATE TABLE users
   username VARCHAR(12),
   password VARCHAR(255)
 );
+
+INSERT into users (username, password) VALUES ('tester', crypt('starbucks', gen_salt('bf', 8)));
