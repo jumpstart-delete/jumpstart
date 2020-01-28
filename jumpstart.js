@@ -29,6 +29,8 @@ app.get('/', (request, response) => {
   response.status(200).render('./index');
 })
 app.post('/login', logInUser);
+app.get('/register', (req, res) => res.render('./pages/register'));
+app.post('/register', registerUser);
 app.get('*', notFoundHandler);
 
 /////// ERROR FUNCTIONS /////////
@@ -41,12 +43,50 @@ function logInUser(req, res) {
   let safeValues = [loginResults.username, loginResults.password];
   client.query(SQL, safeValues)
     .then(result => {
+      console.log(req.body);
       if (result.rowCount === 1) {
         user.username = result.rows[0].username;
         console.log(user.username);
       }
     })
     .catch(err => console.error(err));
+}
+
+function registerUser(req, res) {
+  let registerResults = {
+    username: req.body.username,
+    password: req.body.password
+  }
+  let querySQL = 'SELECT * FROM users WHERE username = $1;';
+  let queryValues = [registerResults.username];
+  client.query(querySQL, queryValues)
+    .then(results => {
+      console.log(req.body)
+      if (results.rowCount !== 0) {
+        console.log('User already exists!');
+      } else {
+        let newUserQuery = `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf', 8)));`;
+        let newUserValues = [registerResults.username, registerResults.password];
+        let newUserTable = `CREATE TABLE ${registerResults.username}_jobs
+          (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255),
+            url VARCHAR(255),
+            summary TEXT,
+            location VARCHAR(255),
+            skills TEXT,
+            tags TEXT
+          );`;
+        client.query(newUserQuery, newUserValues)
+          .then(
+            client.query(newUserTable)
+              .then(results => {
+                console.log(results);
+              })
+          )
+          .catch(err => console.error(err));
+      }
+    })
 }
 
 function notFoundHandler(request, response) {
