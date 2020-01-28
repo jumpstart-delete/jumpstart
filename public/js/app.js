@@ -1,6 +1,6 @@
 'use strict';
 
-$('#azunaButton').on('click', azunaButtons)
-function azunaButtons() {
-  console.log('you clicked')
+$('#goback').on('click', backButton)
+function backButton() {
+  window.history.back();
 }

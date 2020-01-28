@@ -3,26 +3,26 @@
     <%- include('../partials/layout/head.ejs') %>
 <body>
     <%- include('../partials/layout/header.ejs') %>
-    <% data.forEach(datas => { %>
-    <section class="data-card">
+
+    <section class="detail-data">
     <h2><%- datas.title %></h2>
     <p><%- datas.location %></p>
     <p><%- datas.company %></p>
-    <form action="/searches/detail"  method="post" class="form-data">
+    <p><%- datas.summary %></p>
+    <a href="<%- datas.url %>">URL</a>
+    <p><%- datas.skill %></p>
+    <form action="/status"  method="post" class="form-data">
         <input type='hidden' id='title' name="title" value="<%= datas.title %>" required />
         <input type='hidden' id='location' name="location" value="<%= datas.location %>" required />
         <input type='hidden' id='company' name="company" value="<%= datas.company %>" />
         <input type='hidden' id='summary' name="summary" value="<%= datas.summary %>" />
         <input type='hidden' id='url' name="url" value="<%= datas.url %>" />
         <input type='hidden' id='skill' name="skill" value="<%= datas.skill %>" />
-        <button id='button' type='submit'>View in detail</button>
+        <button id='button' type='submit'>Add Database</button>
     </form>
-    </section>
-    <% }) %>
-    
-    <button id='azunaButton'>azuna</button>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="/js/app.js"></script>  
+</section>
+<button id='goback'>Go back</button>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="/js/app.js"></script>  
 </body>
-
 </html>

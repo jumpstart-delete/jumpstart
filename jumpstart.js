@@ -73,7 +73,8 @@ function registerUser(req, res) {
       console.log(req.body)
       if (results.rowCount !== 0) {
         console.log('User already exists!');
-      } else {
+      } 
+      else {
         let newUserQuery = `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf', 8)));`;
         let newUserValues = [registerResults.username, registerResults.password];
         let newUserTable = `CREATE TABLE ${registerResults.username}_jobs
@@ -90,7 +91,10 @@ function registerUser(req, res) {
           .then(
             client.query(newUserTable)
               .then(results => {
-                console.log(results);
+                // console.log('this is just results', results);
+                user.username = registerResults.username;
+                console.log('this is user.username', user.username);
+                res.status(200).redirect('/search');
               })
           )
           .catch(err => console.error(err));
@@ -118,8 +122,8 @@ function displayResult(request, response) {
       let azunaData = parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-      response.status(200).render('./pages/results', { data: azunaData });
-    }).catch(err => console.error(err))
+      response.status(200).render('./pages/results', {data: azunaData});
+    }) .catch(err => console.error(err));
   // superagent.get(museUrl)
   //   .then(results => {
   //     let parseData = JSON.parse(results.text);
@@ -135,13 +139,13 @@ function displayResult(request, response) {
   //       return new Github(value)
   //     })
   //   }) .catch(err => console.error(err));
-
 }
 
 function displayDetail(request, response) {
-  let { title, location, company, summary, url, skill } = request.body
-
-
+  let detailData = request.body
+  console.log(detailData)
+  response.status(200).render('./pages/detail', {datas: detailData});
+  // let {title, location, company, summary, url, skill} = request.body
 
 }
 
@@ -154,7 +158,7 @@ function AzunaJobsearchs(obj) {
   this.url = obj.redirect_url;
   obj.category.label !== undefined ? this.skill = obj.category.label : this.skill = 'not available'
 
-  dataArr.push(this)
+  // dataArr.push(this)
 }
 
 /////// constructor for Muse/////
