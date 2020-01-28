@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <%- include('./partials/layout/head.ejs') %>
+<%- include('./partials/layout/head.ejs') %>
+
 <body>
-    <%- include('./partials/layout/header.ejs') %>
-    <form action="/search" method="post">
-      <fieldset>
-        <label for="username"> username</label>
-        <input type="text" name="username" placeholder="username">
-        <label for="password"> password</label>
-        <input type="password" name="password" placeholder="password">
-        <button type="submit">
-          Login
-        </button>
-      </fieldset>
-    </form>
-    <a href="/register">Create An Account</a>
+  <%- include('./partials/layout/header.ejs') %>
+  <form action="/login" method="post">
+    <fieldset>
+      <label for="username"> username</label>
+      <input type="text" name="username" placeholder="username">
+      <label for="password"> password</label>
+      <input type="password" name="password" placeholder="password">
+      <button type="submit">
+        Login
+      </button>
+    </fieldset>
+  </form>
+  <a href="/register">Create An Account</a>
 </body>
 
 </html>
