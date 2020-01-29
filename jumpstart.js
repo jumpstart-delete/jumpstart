@@ -55,7 +55,7 @@ function logInUser(req, res) {
         res.redirect('/search');
       } else {
         flags.loginFail = true;
-        res.render('/', { loginFail: flags.loginFail })
+        res.render('./index', { loginFail: flags.loginFail })
       }
     })
     .catch(err => console.error(err));
@@ -73,7 +73,7 @@ function registerUser(req, res) {
       console.log(req.body)
       if (results.rowCount !== 0) {
         console.log('User already exists!');
-      } 
+      }
       else {
         let newUserQuery = `INSERT INTO users (username, password) VALUES ($1, crypt($2, gen_salt('bf', 8)));`;
         let newUserValues = [registerResults.username, registerResults.password];
@@ -122,8 +122,8 @@ function displayResult(request, response) {
       let azunaData = parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-      response.status(200).render('./pages/results', {data: azunaData});
-    }) .catch(err => console.error(err));
+      response.status(200).render('./pages/results', { data: azunaData });
+    }).catch(err => console.error(err));
   // superagent.get(museUrl)
   //   .then(results => {
   //     let parseData = JSON.parse(results.text);
@@ -144,7 +144,7 @@ function displayResult(request, response) {
 function displayDetail(request, response) {
   let detailData = request.body
   console.log(detailData)
-  response.status(200).render('./pages/detail', {datas: detailData});
+  response.status(200).render('./pages/detail', { datas: detailData });
   // let {title, location, company, summary, url, skill} = request.body
 
 }
