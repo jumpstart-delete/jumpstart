@@ -50,7 +50,8 @@ app.post('/status/:id', showDetailsfromDB);
 
 //update database from the status page
 app.put('/update/:id', updateJobList);
-// app.delete('/status/:id', deleteJobList);
+app.delete('/status/:id', deleteJobList);
+
 
 /// render job listing from database
 
@@ -138,7 +139,7 @@ function displayResult (request, response) {
 
   let city = request.body.location;
   let azunaKey = process.env.AZUNA_API_KEY;
- 
+
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
 
@@ -168,7 +169,7 @@ function displayResult (request, response) {
 
 }
 
-///////getting muse 
+///////getting muse
 function getMuse(request,response) {
   let city = request.body.location;
   let museKey = process.env.MUSE_API_KEY;
@@ -251,6 +252,19 @@ function updateJobList (request, response) {
   return client.query(SQL3, newvalues)
     .then(response.redirect(`/status/${request.params.id}`))
     .catch(error => console.error('this is inside the updateJobList', error));
+}
+///// delete options from the database
+
+///// delete book from the database
+function deleteJobList (request,response){
+  let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
+  let values = [request.params.id]
+
+  client.query(SQL4, values)
+    .then(response.redirect('/search'))
+    .catch(() => {
+      errorHandler ('cannot delete request here!', request, response);
+    });
 }
 
 /// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
