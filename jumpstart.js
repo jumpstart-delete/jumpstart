@@ -43,11 +43,19 @@ app.post('/status/:id', showDetailsfromDB);
 
 ///see list in the database
 app.get('/list', displayUserTable);
-// app.post('/list', checkUserTable);
+app.post('/list', checkUserTable);
 
 //update database from the status page
 app.put('/update/:id', updateJobList);
 app.delete('/status/:id', deleteJobList);
+
+// post joblist from database
+function checkUserTable(request, response) {
+  let sql5 =`Select * FROM ${user.username}_jobs;`;
+  client.query(sql5)
+    .then(results => response.render('/list', {results: results}))
+    .catch(err => console.log('this is inside checkUserTable function failure', err));
+}
 
 
 /// render job listing from database
@@ -237,10 +245,8 @@ function addJobToDb(request, response) {
 
 ////// get details from the database/////
 function findDetailsfromDB(request, response){
-  // console.log('hi Jin, inside teh findDetails');
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
-  // console.log('this is the values in the findDetails function', values);
   return client.query(SQL2, values)
     .then((results) => {console.log('this is the results.rows', results.rows);
       response.render('./pages/status.ejs',{results: results.rows[0]});
@@ -265,7 +271,6 @@ function updateJobList (request, response) {
     .then(response.redirect(`/status/${request.params.id}`))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
-///// delete options from the database
 
 ///// delete book from the database
 function deleteJobList (request,response){
@@ -318,7 +323,7 @@ function USAJOB(obj) {
   this.location = obj.PositionLocationDisplay;
   obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
   obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
-  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = "undefined";
+  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = 'undefined';
   this.skill = 'Military job'
 }
 
