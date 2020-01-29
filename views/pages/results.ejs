@@ -1,8 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('../partials/layout/head.ejs') %>
+    <script id="data-handle-card" type="text/x-handlebars-template">
+        <section class="data-card">
+            <h2>{{title}}</h2>
+            <p><{{location}}</p>
+            <p>{{company}}</p>
+            <form action="/searches/detail"  method="post" class="form-data">
+                <input type='hidden' id='{{title}}' name="{{title}}" value="{{title}}" required />
+                <input type='hidden' id='{{location}}' name="{{location}}" value="{{location}}" required />
+                <input type='hidden' id='{{company}}' name="{{company}}" value="{{company}}" />
+                <input type='hidden' id='{{summary}}' name="{{summary}}" value="{{summary}}" />
+                <input type='hidden' id='{{url}}' name="{{url}}" value="{{url}}" />
+                <input type='hidden' id='{{skill}}' name="{{skill}}" value="{{skill}}" />
+                <button id='button' type='submit'>View in detail</button>
+            </form>
+        </section>
+      </script>
 <body>
     <%- include('../partials/layout/header.ejs') %>
+    <main class='new-data'>
     <% data.forEach(datas => { %>
     <section class="data-card">
     <h2><%- datas.title %></h2>
@@ -19,9 +36,13 @@
     </form>
     </section>
     <% }) %>
+</main>
     
-    <button id='azunaButton'>azuna</button>
+        <button id='museButton'>Muse</button>
+        <button id='githubButton'>githubButton</button>
+
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.js"></script>
     <script src="/js/app.js"></script>  
 </body>
 
