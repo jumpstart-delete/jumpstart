@@ -11,11 +11,12 @@
 
  <%- include('../partials/global/header')%>
 <body>
-    <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>
+    <h1>Welcome <%= username %> !! This is your JOB LIST..</h1>
     <% results.forEach(tabledata => {%>
         <li>This is the ID <%- tabledata.id%></li>
         <li><%- tabledata.location%></li>
         <li><%- tabledata.title%></li>
+        <li><%- tabledata.company%></li>
         <li>This is Your TAG <%- tabledata.tags%></li>
 
      <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
