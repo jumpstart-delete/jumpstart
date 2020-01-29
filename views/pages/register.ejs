@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <%- include('./partials/layout/head.ejs') %>
+  <%- include('../partials/layout/head.ejs') %>
 </head>
+
 <body>
   <main>
     <form action="/register" method="post">
       <fieldset>
-          <label for="username"> username</label>
-          <input type="text" placeholder="username">
-          <label for="password"> password</label>
-          <input type="text" placeholder="password">
-          <button type="submit">
-            Login
-          </button>
-        </fieldset>
+        <label for="username"> username</label>
+        <input type="text" name="username" placeholder="username">
+        <label for="password"> password</label>
+        <input type="password" name="password" placeholder="password">
+        <button type="submit">
+          Register
+        </button>
+      </fieldset>
     </form>
 
   </main>
-  
+
 </body>
+
 </html>

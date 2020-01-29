@@ -38,3 +38,26 @@ button{
   margin: auto;
   margin-top: 30px;
 }
+
+.data-card {
+  clear: both;
+  border: 1px black solid;
+  text-align: center;
+  width: 80%;
+  margin: 20px auto;
+}
+
+.data-card > p {
+  margin: 5px auto;
+}
+
+.detail-data {
+  clear:both;
+}
+
+.detail-data button {
+  background-color: yellow;
+  color: grey;
+}
+
+
