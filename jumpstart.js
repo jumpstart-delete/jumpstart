@@ -36,10 +36,13 @@ app.post('/register', registerUser);
 app.get('/search', renderSearch);
 app.post('/searches/new', displayResult);
 app.post('/searches/detail', displayDetail);
-app.get('*', notFoundHandler);
 
 /// entering into database from the view_details.ejs///
 app.post('/status', addJobToDb);
+app.get('/status/:id', findDetailsfromDB);
+app.post('/status/:id', showDetailsfromDB);
+
+
 
 
 /////// LOGIN FUNCTIONS /////////
@@ -108,12 +111,12 @@ function registerUser(req, res) {
     })
 }
 
-////// RENDER SEARCH ON SEARCH PAGE///////
+////// RENDER SEARCHES ON SEARCH PAGE///////
 function renderSearch(req, res) {
   res.status(200).render('./pages/search', {username: user.username});
 }
 
-///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE//////
+///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult (request, response) {
 
   let city = request.body.location;
@@ -157,22 +160,43 @@ function displayDetail(request, response) {
   // let {title, location, company, summary, url, skill} = request.body
 
 }
-/////// ADDING JOB TO DATABASE/////
+/////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   console.log('this is request.body within the add job to database', request.body);
 
   // deconstruct the input
   let {title, location, summary, url, skill} = request.body;
 
+  //// check if it already exits in the database
+
   let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
   let safeValues = [title, url, summary, location, skill];
 
   return client.query(SQL1, safeValues)
     .then(result => {
-      console.log('this is the result from the client query', result.rows[0].id);
+      console.log('this is the result from the client query in the add to database function', result.rows[0].id);
       response.redirect(`/status/${result.rows[0].id}`)
     })
     .catch(err => console.error(err));
+}
+
+////// get details from the database to allow updating/////
+function findDetailsfromDB(request, response){
+  console.log('hi Jin, inside teh findDetails');
+  let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
+  let values = [request.params.id];
+  console.log('this is the values in the findDetails function', values);
+  return client.query(SQL2, values)
+    .then((results) => {console.log('this is the results.rows', results.rows);
+    response.render('./pages/status.ejs',{results: results.rows[0]});
+    })
+    .catch(err => console.error(err));
+}
+
+function showDetailsfromDB(request, response) {
+  console.log('hi Vij, be patient');
+
+  response.status(200).render('./pages/status');
 }
 
 //////////////////////// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
@@ -214,6 +238,7 @@ function Github(obj) {
 }
 
 /////////////////// Error handler////////////////
+app.get('*', notFoundHandler);
 
 function notFoundHandler(request, response) {
   response.status(404).send('This route does not exist');
