@@ -1,0 +1,17 @@
+<form action="/login" method="post">
+  <% if (locals.loginFail === true) { %>
+  <%- include('./login-fail') %>
+  <% } %>
+  <label>
+    <span>Username</span>
+    <input type="text" name="username" placeholder="Username">
+  </label>
+  <label>
+    <span>Password</span>
+    <input type="password" name="password" placeholder="Password" minlength="8">
+  </label>
+  <button type="submit">
+    Login
+  </button>
+</form>
+<span class="register-link">Not a user? <a href="/register">Create An Account!</a></span>
