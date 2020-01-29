@@ -5,22 +5,26 @@
     <%- include('../partials/layout/header.ejs') %>
 
     <section class="status-data">
+      
         <h2><%- results.title %></h2>
         <p><%- results.location %></p>
         <p><%- results.summary %></p>
         <a href="<%- results.url %>" target="_blank">URL of job</a>
         <p><%- results.skills %></p>
+        <p>You have tagged the job as: <%- results.tags %></p>
             <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
             <input type='hidden' id='location' name="location" value="<%= results.location %>" required />
             <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
             <input type='hidden' id='url' name="url" value="<%= results.url %>" />
             <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
             <input type='hidden' id='tags' name="tags" value="<%= results.tags %>" />
-            <button id='button' type='submit'>Change status</button>
-      </section>
+    </section>
+
+    <%- include('edit', {formAction: 'update', results: results}) %>
+    <%- include('edit_delete', {formAction: 'delete', results: results}) %>
 
 
-<button id='goback'>Go back</button>
+
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="/js/app.js"></script>  
 </body>
