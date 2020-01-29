@@ -26,10 +26,7 @@ app.use(express.static('./public'));
 app.use(methodOverride('_method'));
 
 // Declare routes.
-app.get('/', (request, response) => {
-  response.status(200).render('./index');
-})
-
+app.get('/', displayIndex);
 app.post('/login', logInUser);
 app.get('/register', displayRegister);
 app.post('/register', registerUser);
@@ -44,13 +41,25 @@ app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
+///see list in the database
+app.get('/list', displayUserTable);
+// app.post('/list', checkUserTable);
+
 //update database from the status page
 app.put('/update/:id', updateJobList);
 app.delete('/status/:id', deleteJobList);
 
 
 /// render job listing from database
+function displayUserTable (request, response) {
+  console.log('inside the displayUserTable function');
+  response.render('./pages/list.ejs');
+}
 
+////// displayIndexpage
+function displayIndex(request, response) {
+  response.status(200).render('./index');
+}
 
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
@@ -264,7 +273,7 @@ function deleteJobList (request,response){
   let values = [request.params.id]
 
   client.query(SQL4, values)
-    .then(response.redirect('/search'))
+    .then(response.redirect('/list'))
     .catch(() => {
       errorHandler ('cannot delete request here!', request, response);
     });
