@@ -32,19 +32,27 @@ app.get('/', (request, response) => {
 })
 app.get('/muse', getMuse)
 app.get('/github', getGithub)
+
+//login and register user
 app.post('/login', logInUser);
-app.get('/register', (req, res) => res.render('./pages/register'));
+app.get('/register', displayRegister);
 app.post('/register', registerUser);
+
+// search pages and display searches
 app.get('/search', renderSearch);
 app.post('/searches/new', displayResult);
 app.post('/searches/detail', displayDetail);
 
-/// entering into database from the view_details.ejs///
+// enter search results into database
 app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
+//update database from the status page
+app.put('/update/:id', updateJobList);
+// app.delete('/status/:id', deleteJobList);
 
+/// render job listing from database
 
 
 /////// LOGIN FUNCTIONS /////////
@@ -68,6 +76,11 @@ function logInUser(req, res) {
       }
     })
     .catch(err => console.error(err));
+}
+
+/// Display register page
+function displayRegister (request, response){
+  response.render('./pages/register');
 }
 
 /////// REGISTER FUNCTIONS, ROUTED TO THE SEARCH PAGE /////////
@@ -129,7 +142,7 @@ function displayResult (request, response) {
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
 
-    superagent.get(azunaUrl)
+  superagent.get(azunaUrl)
     .then(results => {
       let parsedData = (JSON.parse(results.text))
       let azunaData = parsedData.results.map(data => {
@@ -170,7 +183,7 @@ function getMuse(request,response) {
     }) .catch(err => console.error(err))
 }
 
-//////////////
+//////////////getting Github
 function getGithub(request,response) {
   let city = request.body.location;
   let jobQuery = request.body.job_title;
@@ -194,14 +207,10 @@ function displayDetail(request, response) {
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
-  console.log('this is request.body within the add job to database', request.body);
 
   // deconstruct the input
   let {title, location, summary, url, skill} = request.body;
-
-
-  //// check if it already exits in the database
-
+  //// INCOMPLETE: check if it already exits in the database
   let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
   let safeValues = [title, url, summary, location, skill];
 
@@ -213,7 +222,7 @@ function addJobToDb(request, response) {
     .catch(err => console.error(err));
 }
 
-////// get details from the database to allow updating/////
+////// get details from the database/////
 function findDetailsfromDB(request, response){
   console.log('hi Jin, inside teh findDetails');
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
@@ -221,7 +230,7 @@ function findDetailsfromDB(request, response){
   console.log('this is the values in the findDetails function', values);
   return client.query(SQL2, values)
     .then((results) => {console.log('this is the results.rows', results.rows);
-    response.render('./pages/status.ejs',{results: results.rows[0]});
+      response.render('./pages/status.ejs',{results: results.rows[0]});
     })
     .catch(err => console.error(err));
 }
@@ -232,7 +241,19 @@ function showDetailsfromDB(request, response) {
   response.status(200).render('./pages/status');
 }
 
-//////////////////////// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
+/////update details from the status page using middleware
+
+function updateJobList (request, response) {
+  console.log('this is from the updateJoblist function', request.body);
+  let {title, location, summary, url, skill, tags} = request.body;
+  let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, tags=$6 WHERE id=$7;`;
+  let newvalues = [title, location, summary, url, skill, tags, request.params.id];
+  return client.query(SQL3, newvalues)
+    .then(response.redirect(`/status/${request.params.id}`))
+    .catch(error => console.error('this is inside the updateJobList', error));
+}
+
+/// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
 
 // /////// constructor for azuna/////
 function AzunaJobsearchs(obj) {
