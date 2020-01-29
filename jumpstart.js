@@ -113,11 +113,13 @@ function registerUser(req, res) {
 
 ////// RENDER SEARCHES ON SEARCH PAGE///////
 function renderSearch(req, res) {
-  res.status(200).render('./pages/search', {username: user.username});
+  res.status(200).render('./pages/search', { username: user.username });
 }
+
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult (request, response) {
+
 
   let city = request.body.location;
   let azunaKey = process.env.AZUNA_API_KEY;
@@ -215,7 +217,7 @@ function AzunaJobsearchs(obj) {
 /////// constructor for Muse/////
 function Musejobsearch(obj) {
   obj.name !== undefined ? this.title = obj.name : this.title = 'title is unavailable'
-  obj.locations.length > 1 ? this.location = obj.locations.map(value => {return value.name}).join(', ') : this.location = obj.locations[0].name
+  obj.locations.length > 1 ? this.location = obj.locations.map(value => { return value.name }).join(', ') : this.location = obj.locations[0].name
   this.company = obj.company.name;
   this.summary = obj.contents;
   this.url = obj.refs.landing_page;
@@ -229,7 +231,7 @@ function Github(obj) {
   obj.name !== undefined ? this.title = obj.title : this.title = 'title is unavailable';
   obj.location !== undefined ? this.location = obj.location : this.location = 'not available';
   obj.company !== undefined ? this.company = obj.company : this.company = 'not available';
-  this.summary !== undefined ? this.summary = obj.description :'not available';
+  this.summary !== undefined ? this.summary = obj.description : 'not available';
   obj.url !== undefined ? this.url = obj.url :
     this.url = 'not available';
   this.skill = 'not available'
@@ -241,7 +243,7 @@ function Github(obj) {
 app.get('*', notFoundHandler);
 
 function notFoundHandler(request, response) {
-  response.status(404).send('This route does not exist');
+  response.status(404).render('./pages/404');
 }
 
 function errorHandler(error, request, response) {
