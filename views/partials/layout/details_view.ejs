@@ -1,0 +1,17 @@
+<section class="detail-data">
+    <h2><%- datas.title %></h2>
+    <p><%- datas.location %></p>
+    <p><%- datas.company %></p>
+    <p><%- datas.summary %></p>
+    <a href="<%- datas.url %>" target="_blank">URL of job</a>
+    <p><%- datas.skill %></p>
+    <form action="/status"  method="post" class="form-data">
+        <input type='hidden' id='title' name="title" value="<%= datas.title %>" required />
+        <input type='hidden' id='location' name="location" value="<%= datas.location %>" required />
+        <input type='hidden' id='company' name="company" value="<%= datas.company %>" />
+        <input type='hidden' id='summary' name="summary" value="<%= datas.summary %>" />
+        <input type='hidden' id='url' name="url" value="<%= datas.url %>" />
+        <input type='hidden' id='skill' name="skill" value="<%= datas.skill %>" />
+        <button id='button' type='submit'>Add Database</button>
+    </form>
+  </section>
