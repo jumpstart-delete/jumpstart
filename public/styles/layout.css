@@ -47,6 +47,14 @@ button{
   margin: 20px auto;
 }
 
+.new-data > section {
+  clear: both;
+  border: 1px black solid;
+  text-align: center;
+  width: 80%;
+  margin: 20px auto;
+}
+
 .data-card > p {
   margin: 5px auto;
 }

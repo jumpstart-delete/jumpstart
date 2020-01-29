@@ -18,7 +18,6 @@ const user = require('./lib/user');
 const app = express();
 const PORT = process.env.PORT || 8081;
 const client = new pg.Client(process.env.DATABASE_URL);
-let dataArr = [];
 
 // Declare app middleware.
 app.set('view engine', 'ejs');
@@ -30,8 +29,8 @@ app.use(methodOverride('_method'));
 app.get('/', (request, response) => {
   response.status(200).render('./index');
 })
-app.get('/muse', getMuse)
-app.get('/github', getGithub)
+// app.get('/githublink', getGithub);
+// app.get('/muse', getMuse);
 app.post('/login', logInUser);
 app.get('/register', (req, res) => res.render('./pages/register'));
 app.post('/register', registerUser);
@@ -113,6 +112,22 @@ function registerUser(req, res) {
     })
 }
 
+
+///////////RANDOMIZE////
+Array.prototype.shuffle = function () {
+  let input = this;
+
+  for (let i = input.length - 1; i >= 0; i--) {
+
+    let randomIndex = Math.floor(Math.random() * (i + 1));
+    let itemAtIndex = input[randomIndex];
+
+    input[randomIndex] = input[i];
+    input[i] = itemAtIndex;
+  }
+  return input;
+}
+
 ////// RENDER SEARCHES ON SEARCH PAGE///////
 function renderSearch(req, res) {
   res.status(200).render('./pages/search', { username: user.username });
@@ -121,80 +136,69 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult (request, response) {
-
-
-  let city = request.body.location;
   let azunaKey = process.env.AZUNA_API_KEY;
- 
+  let museKey = process.env.MUSE_API_KEY;
+  let usaKey = process.env.USAJOBS_API_KEY;
+  let city = request.body.location;
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
+  let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
+  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
+  let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
-    superagent.get(azunaUrl)
+  let azunaResult = superagent.get(azunaUrl)
     .then(results => {
       let parsedData = (JSON.parse(results.text))
-      let azunaData = parsedData.results.map(data => {
+      return parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-      response.status(200).render('./pages/results', {data: azunaData});
     }) .catch(err => console.error(err));
-  // superagent.get(museUrl)
-  //   .then(results => {
-  //     let parseData = JSON.parse(results.text);
-  //     parseData.results.map(data => {
-  //       return new Musejobsearch(data)
-  //     })
-  //     console.log('we hit muse')
-  //     response.status(200).render('./pages/results', {data: dataArr});
-  //   }) .catch(err => console.error(err))
-  // superagent.get(githubUrl)
-  //   .then(githubresults => {
-  //     return githubresults.body.map(value => {
-  //       return new Github(value)
-  //     })
-  //   }) .catch(err => console.error(err));
-
-}
-
-///////getting muse 
-function getMuse(request,response) {
-  let city = request.body.location;
-  let museKey = process.env.MUSE_API_KEY;
-  let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
-  superagent.get(museUrl)
+  let museResult = superagent.get(museUrl)
     .then(results => {
       let parseData = JSON.parse(results.text);
-      let normalData = parseData.results.map(data => {
+      return parseData.results.map(data => {
         return new Musejobsearch(data)
       })
-      response.status(200).send(normalData);
     }) .catch(err => console.error(err))
-}
-
-//////////////
-function getGithub(request,response) {
-  let city = request.body.location;
-  let jobQuery = request.body.job_title;
-  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
-  superagent.get(githubUrl)
+  let gitHubResult = superagent.get(githubUrl)
     .then(githubresults => {
-      console.log(githubresults.text);
-      let normalData = githubresults.body.map(value => {
+      return githubresults.body.map(value => {
         return new Github(value)
       })
-      // console.log(normalData)
-      response.status(200).send(normalData);
     }) .catch(err => console.error(err));
+  let usaJobResult = superagent.get(usaUrl)
+    .set({
+      'Host': 'data.usajobs.gov',
+      'User-Agent': 'svlr2006@gmail.com',
+      'Authorization-Key': usaKey
+    })
+    .then(results => {
+      let parsedData = JSON.parse(results.text)
+      // console.log(parsedData)
+      let data = parsedData.SearchResult.SearchResultItems
+      return data.map(value => {
+        return new USAJOB(value.MatchedObjectDescriptor)
+      })
+    }) .catch(err => console.error(err));
+
+  Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
+    .then(result => {
+      let newData =result.flat(3);
+      let shuffleData= newData.shuffle();
+
+      response.status(200).render('./pages/results', {data: shuffleData});
+    })
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
-  console.log(detailData)
+  // console.log(detailData);
   response.status(200).render('./pages/detail', {datas: detailData});
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
-  console.log('this is request.body within the add job to database', request.body);
+  // console.log('this is request.body within the add job to database', request.body);
 
   // deconstruct the input
   let {title, location, summary, url, skill} = request.body;
@@ -207,7 +211,7 @@ function addJobToDb(request, response) {
 
   return client.query(SQL1, safeValues)
     .then(result => {
-      console.log('this is the result from the client query in the add to database function', result.rows[0].id);
+      // console.log('this is the result from the client query in the add to database function', result.rows[0].id);
       response.redirect(`/status/${result.rows[0].id}`)
     })
     .catch(err => console.error(err));
@@ -215,13 +219,13 @@ function addJobToDb(request, response) {
 
 ////// get details from the database to allow updating/////
 function findDetailsfromDB(request, response){
-  console.log('hi Jin, inside teh findDetails');
+  // console.log('hi Jin, inside teh findDetails');
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
-  console.log('this is the values in the findDetails function', values);
+  // console.log('this is the values in the findDetails function', values);
   return client.query(SQL2, values)
     .then((results) => {console.log('this is the results.rows', results.rows);
-    response.render('./pages/status.ejs',{results: results.rows[0]});
+      response.render('./pages/status.ejs',{results: results.rows[0]});
     })
     .catch(err => console.error(err));
 }
@@ -242,8 +246,6 @@ function AzunaJobsearchs(obj) {
   this.summary = obj.description;
   this.url = obj.redirect_url;
   obj.category.label !== undefined ? this.skill = obj.category.label : this.skill = 'not available'
-
-  // dataArr.push(this)
 }
 
 /////// constructor for Muse/////
@@ -254,21 +256,27 @@ function Musejobsearch(obj) {
   this.summary = obj.contents;
   this.url = obj.refs.landing_page;
   obj.categories.name !== undefined ? this.skill = obj.categories[0].name : this.skill = 'not available';
-
-  dataArr.push(this)
 }
 
 //////constructor for github////
 function Github(obj) {
-  obj.name !== undefined ? this.title = obj.title : this.title = 'title is unavailable';
+  obj.title !== undefined ? this.title = obj.title : this.title = 'title is unavailable';
   obj.location !== undefined ? this.location = obj.location : this.location = 'not available';
   obj.company !== undefined ? this.company = obj.company : this.company = 'not available';
-  this.summary !== undefined ? this.summary = obj.description : 'not available';
+  obj.description !== undefined ? this.summary = obj.description : 'not available';
   obj.url !== undefined ? this.url = obj.url :
     this.url = 'not available';
   this.skill = 'not available'
+}
 
-  dataArr.push(this)
+///////////constructor for USAjob/////
+function USAJOB(obj) {
+  obj.PositionTitle !== undefined ? this.title = obj.PositionTitle : this.title = 'title is unavailable';
+  this.location = obj.PositionLocationDisplay;
+  obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
+  obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
+  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = "undefined";
+  this.skill = 'Military job'
 }
 
 /////////////////// Error handler////////////////
