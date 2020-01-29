@@ -7,12 +7,12 @@
     <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
     <input type='hidden' id='url' name="url" value="<%= results.url %>" />
     <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
-    <input list='tags' id='tags' name='tags' value="<%= results.tags %>" placeholder="Enter Job Status"/>
-    <datalist id="tag">
+
+    <select name="tags" value="<%= results.tags %>">
         <option name="tag" value="favorite"> Favorite </option>
         <option name="tag" value="pending"> Pending </option>
         <option name="tag" value = "completed"> Completed </option>
-    </datalist> 
+    </select> 
     <button id='button' type='submit'> Submit </button>
 
 </form>

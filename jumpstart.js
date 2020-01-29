@@ -43,17 +43,31 @@ app.post('/status/:id', showDetailsfromDB);
 
 ///see list in the database
 app.get('/list', displayUserTable);
-// app.post('/list', checkUserTable);
+app.put('/update/list/:id', updateUserTable);
 
 //update database from the status page
-app.put('/update/:id', updateJobList);
-app.delete('/status/:id', deleteJobList);
+app.put('/update/:id', updateJob);
+app.delete('/status/:id', deleteJob);
 
+// post joblist from database
+function displayUserTable(request, response) {
+  let sql5 =`Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
+  client.query(sql5)
+    .then(results => {
+      response.render('./pages/list', {results: results.rows, username: user.username });})
+    .catch(err => console.log('this is inside displayUserTable function failure', err));
+}
 
 /// render job listing from database
-function displayUserTable (request, response) {
-  console.log('inside the displayUserTable function');
-  response.render('./pages/list.ejs');
+function updateUserTable (request, response) {
+  console.log('inside the updateUserTable function this is the request.body', request.body);
+  console.log('this is the params id', request.params.id);
+  let tags = request.body.tags;
+  let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
+  let newvalues = [tags, request.params.id];
+  return client.query(SQL5, newvalues)
+    .then(response.redirect(`/list`))
+    .catch(error => console.error('this is inside the updateUserTable', error));
 }
 
 ////// displayIndexpage
@@ -75,7 +89,7 @@ function logInUser(req, res) {
       if (result.rowCount === 1) {
         user.username = result.rows[0].username;
         console.log(user.username);
-        res.redirect('/search');
+        res.redirect('/list');
       } else {
         flags.loginFail = true;
         res.render('./index', { loginFail: flags.loginFail })
@@ -224,12 +238,11 @@ function addJobToDb(request, response) {
   // deconstruct the input
   let {title, location, summary, url, skill} = request.body;
   //// INCOMPLETE: check if it already exits in the database
-  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
-  let safeValues = [title, url, summary, location, skill];
+  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, tags) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`;
+  let safeValues = [title, url, summary, location, skill, 'favorite'];
 
   return client.query(SQL1, safeValues)
     .then(result => {
-      // console.log('this is the result from the client query in the add to database function', result.rows[0].id);
       response.redirect(`/status/${result.rows[0].id}`)
     })
     .catch(err => console.error(err));
@@ -237,12 +250,10 @@ function addJobToDb(request, response) {
 
 ////// get details from the database/////
 function findDetailsfromDB(request, response){
-  // console.log('hi Jin, inside teh findDetails');
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
-  // console.log('this is the values in the findDetails function', values);
   return client.query(SQL2, values)
-    .then((results) => {console.log('this is the results.rows', results.rows);
+    .then((results) => {
       response.render('./pages/status.ejs',{results: results.rows[0]});
     })
     .catch(err => console.error(err));
@@ -256,19 +267,18 @@ function showDetailsfromDB(request, response) {
 
 /////update details from the status page using middleware
 
-function updateJobList (request, response) {
-  console.log('this is from the updateJoblist function', request.body);
+function updateJob (request, response) {
   let {title, location, summary, url, skill, tags} = request.body;
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, tags=$6 WHERE id=$7;`;
   let newvalues = [title, location, summary, url, skill, tags, request.params.id];
   return client.query(SQL3, newvalues)
-    .then(response.redirect(`/status/${request.params.id}`))
+    // .then(response.redirect(`/status/${request.params.id}`))
+    .then(response.redirect(`/list`))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
-///// delete options from the database
 
 ///// delete book from the database
-function deleteJobList (request,response){
+function deleteJob (request,response){
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id]
 
@@ -318,7 +328,7 @@ function USAJOB(obj) {
   this.location = obj.PositionLocationDisplay;
   obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
   obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
-  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = "undefined";
+  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = 'undefined';
   this.skill = 'Military job'
 }
 
