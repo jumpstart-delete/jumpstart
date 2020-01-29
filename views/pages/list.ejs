@@ -14,19 +14,18 @@
     <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>
     <% results.forEach(tabledata => {%>
         <li>This is the ID <%- tabledata.id%></li>
+        <li><%- tabledata.location%></li>
+        <li><%- tabledata.title%></li>
         <li>This is Your TAG <%- tabledata.tags%></li>
 
      <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
-
         <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
                 <option name="tag" value="favorite"> Favorite </option>
                 <option name="tag" value="pending"> Pending </option>
                 <option name="tag" value = "completed"> Completed </option>
         </select> 
     </form>
-        <li><%- tabledata.location%></li>
-        <li><%- tabledata.title%></li>
-        <li><%- tabledata.url%></li>
+
 
     <%})%>
 
