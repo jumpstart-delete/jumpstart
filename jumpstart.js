@@ -30,6 +30,8 @@ app.use(methodOverride('_method'));
 app.get('/', (request, response) => {
   response.status(200).render('./index');
 })
+app.get('/muse', getMuse)
+app.get('/github', getGithub)
 app.post('/login', logInUser);
 app.get('/register', (req, res) => res.render('./pages/register'));
 app.post('/register', registerUser);
@@ -123,13 +125,11 @@ function displayResult (request, response) {
 
   let city = request.body.location;
   let azunaKey = process.env.AZUNA_API_KEY;
-  let museKey = process.env.MUSE_API_KEY
+ 
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
-  // let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
-  // let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
 
-  superagent.get(azunaUrl)
+    superagent.get(azunaUrl)
     .then(results => {
       let parsedData = (JSON.parse(results.text))
       let azunaData = parsedData.results.map(data => {
@@ -152,6 +152,38 @@ function displayResult (request, response) {
   //       return new Github(value)
   //     })
   //   }) .catch(err => console.error(err));
+
+}
+
+///////getting muse 
+function getMuse(request,response) {
+  let city = request.body.location;
+  let museKey = process.env.MUSE_API_KEY;
+  let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
+  superagent.get(museUrl)
+    .then(results => {
+      let parseData = JSON.parse(results.text);
+      let normalData = parseData.results.map(data => {
+        return new Musejobsearch(data)
+      })
+      response.status(200).send(normalData);
+    }) .catch(err => console.error(err))
+}
+
+//////////////
+function getGithub(request,response) {
+  let city = request.body.location;
+  let jobQuery = request.body.job_title;
+  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
+  superagent.get(githubUrl)
+    .then(githubresults => {
+      console.log(githubresults.text);
+      let normalData = githubresults.body.map(value => {
+        return new Github(value)
+      })
+      // console.log(normalData)
+      response.status(200).send(normalData);
+    }) .catch(err => console.error(err));
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
@@ -159,8 +191,6 @@ function displayDetail(request, response) {
   let detailData = request.body
   console.log(detailData)
   response.status(200).render('./pages/detail', {datas: detailData});
-  // let {title, location, company, summary, url, skill} = request.body
-
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
@@ -168,6 +198,7 @@ function addJobToDb(request, response) {
 
   // deconstruct the input
   let {title, location, summary, url, skill} = request.body;
+
 
   //// check if it already exits in the database
 
@@ -202,6 +233,7 @@ function showDetailsfromDB(request, response) {
 }
 
 //////////////////////// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////
+
 // /////// constructor for azuna/////
 function AzunaJobsearchs(obj) {
   obj.title !== undefined ? this.title = obj.title : this.title = 'title is unavailable'
