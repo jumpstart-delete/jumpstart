@@ -16,7 +16,7 @@ const user = require('./lib/user');
 
 // Declare app configs.
 const app = express();
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 3001;
 const client = new pg.Client(process.env.DATABASE_URL);
 
 // Declare app middleware.
@@ -76,7 +76,7 @@ function logInUser(req, res) {
 }
 
 /// Display register page
-function displayRegister (request, response){
+function displayRegister(request, response) {
   response.render('./pages/register');
 }
 
@@ -146,16 +146,17 @@ function renderSearch(req, res) {
 
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
-function displayResult (request, response) {
+function displayResult(request, response) {
   let azunaKey = process.env.AZUNA_API_KEY;
   let museKey = process.env.MUSE_API_KEY;
   let usaKey = process.env.USAJOBS_API_KEY;
   let city = request.body.location;
+  let email = process.env.EMAIL;
 
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
-  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
+  let githubUrl = `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
   let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
   let azunaResult = superagent.get(azunaUrl)
@@ -164,7 +165,7 @@ function displayResult (request, response) {
       return parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-    }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
 
   let museResult = superagent.get(museUrl)
     .then(results => {
@@ -172,17 +173,17 @@ function displayResult (request, response) {
       return parseData.results.map(data => {
         return new Musejobsearch(data)
       })
-    }) .catch(err => console.error(err))
+    }).catch(err => console.error(err))
   let gitHubResult = superagent.get(githubUrl)
     .then(githubresults => {
       return githubresults.body.map(value => {
         return new Github(value)
       })
-    }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
   let usaJobResult = superagent.get(usaUrl)
     .set({
       'Host': 'data.usajobs.gov',
-      'User-Agent': 'svlr2006@gmail.com',
+      'User-Agent': email,
       'Authorization-Key': usaKey
     })
     .then(results => {
@@ -192,14 +193,14 @@ function displayResult (request, response) {
       return data.map(value => {
         return new USAJOB(value.MatchedObjectDescriptor)
       })
-    }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
 
   Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
     .then(result => {
-      let newData =result.flat(3);
-      let shuffleData= newData.shuffle();
+      let newData = result.flat(3);
+      let shuffleData = newData.shuffle();
 
-      response.status(200).render('./pages/results', {data: shuffleData});
+      response.status(200).render('./pages/results', { data: shuffleData });
     })
 }
 
@@ -207,12 +208,12 @@ function displayResult (request, response) {
 function displayDetail(request, response) {
   let detailData = request.body
   // console.log(detailData);
-  response.status(200).render('./pages/detail', {datas: detailData});
+  response.status(200).render('./pages/detail', { datas: detailData });
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   // deconstruct the input
-  let {title, location, summary, url, skill} = request.body;
+  let { title, location, summary, url, skill } = request.body;
   //// INCOMPLETE: check if it already exits in the database
   let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
   let safeValues = [title, url, summary, location, skill];
@@ -226,14 +227,15 @@ function addJobToDb(request, response) {
 }
 
 ////// get details from the database/////
-function findDetailsfromDB(request, response){
+function findDetailsfromDB(request, response) {
   // console.log('hi Jin, inside teh findDetails');
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
   // console.log('this is the values in the findDetails function', values);
   return client.query(SQL2, values)
-    .then((results) => {console.log('this is the results.rows', results.rows);
-      response.render('./pages/status.ejs',{results: results.rows[0]});
+    .then((results) => {
+      console.log('this is the results.rows', results.rows);
+      response.render('./pages/status.ejs', { results: results.rows[0] });
     })
     .catch(err => console.error(err));
 }
@@ -246,9 +248,9 @@ function showDetailsfromDB(request, response) {
 
 /////update details from the status page using middleware
 
-function updateJobList (request, response) {
+function updateJobList(request, response) {
   console.log('this is from the updateJoblist function', request.body);
-  let {title, location, summary, url, skill, tags} = request.body;
+  let { title, location, summary, url, skill, tags } = request.body;
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, tags=$6 WHERE id=$7;`;
   let newvalues = [title, location, summary, url, skill, tags, request.params.id];
   return client.query(SQL3, newvalues)
@@ -258,14 +260,14 @@ function updateJobList (request, response) {
 ///// delete options from the database
 
 ///// delete book from the database
-function deleteJobList (request,response){
+function deleteJobList(request, response) {
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id]
 
   client.query(SQL4, values)
     .then(response.redirect('/search'))
     .catch(() => {
-      errorHandler ('cannot delete request here!', request, response);
+      errorHandler('cannot delete request here!', request, response);
     });
 }
 
