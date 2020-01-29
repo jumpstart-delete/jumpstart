@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+                <link rel="stylesheet" href="/styles/index/index.css">
+                <title>JumpStart Job Search Engine</title>
+    </head>
 
  <%- include('../partials/global/header')%>
 <body>
-    SUCESS inside the list ejs!
+    <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>
     <% results.forEach(tabledata => {%>
-        <li><%- tabledata.tags%></li>
+        <li>This is the ID <%- tabledata.id%></li>
+        <li>This is Your TAG <%- tabledata.tags%></li>
+
+     <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
+
+        <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
+                <option name="tag" value="favorite"> Favorite </option>
+                <option name="tag" value="pending"> Pending </option>
+                <option name="tag" value = "completed"> Completed </option>
+        </select> 
+    </form>
         <li><%- tabledata.location%></li>
         <li><%- tabledata.title%></li>
+        <li><%- tabledata.url%></li>
+
     <%})%>
 
 </body>
