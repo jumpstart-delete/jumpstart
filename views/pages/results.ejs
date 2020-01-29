@@ -29,9 +29,13 @@
             </form>
         </section>
         <% }) %>
-        <button class='buttonon' id='hide-button' value='previous'>Previous Page</button>
-        <h2><%= data.length %> search</h2>
-        <button class='buttonon' value='next'>Next Page</button>
+        <button class='buttonon' id='hide-button' value='previous'>prev</button>
+        <span>
+        <% for(let i = 1; i <= Math.floor(data.length/6); i++) { %>
+        <p id="<%= i %>"><%= i %></p>
+        <% } %>
+        </span>
+        <button class='buttonon' value='next'>next</button>
     </main>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.js"></script>
