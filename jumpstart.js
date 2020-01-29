@@ -151,6 +151,7 @@ function displayResult (request, response) {
   let museKey = process.env.MUSE_API_KEY;
   let usaKey = process.env.USAJOBS_API_KEY;
   let city = request.body.location;
+  let email= process.env.EMAIL;
 
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
@@ -182,7 +183,7 @@ function displayResult (request, response) {
   let usaJobResult = superagent.get(usaUrl)
     .set({
       'Host': 'data.usajobs.gov',
-      'User-Agent': 'svlr2006@gmail.com',
+      'User-Agent': email,
       'Authorization-Key': usaKey
     })
     .then(results => {
