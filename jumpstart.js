@@ -164,25 +164,6 @@ function displayResult (request, response) {
       return parsedData.results.map(data => {
         return new AzunaJobsearchs(data)
       });
-<<<<<<< HEAD
-      response.status(200).render('./pages/results', { data: azunaData });
-    }).catch(err => console.error(err));
-  // superagent.get(museUrl)
-  //   .then(results => {
-  //     let parseData = JSON.parse(results.text);
-  //     parseData.results.map(data => {
-  //       return new Musejobsearch(data)
-  //     })
-  //     console.log('we hit muse')
-  //     response.status(200).render('./pages/results', {data: dataArr});
-  //   }) .catch(err => console.error(err))
-  // superagent.get(githubUrl)
-  //   .then(githubresults => {
-  //     return githubresults.body.map(value => {
-  //       return new Github(value)
-  //     })
-  //   }) .catch(err => console.error(err));
-=======
     }) .catch(err => console.error(err));
 
   let museResult = superagent.get(museUrl)
@@ -220,17 +201,11 @@ function displayResult (request, response) {
 
       response.status(200).render('./pages/results', {data: shuffleData});
     })
->>>>>>> dev-staging
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
-<<<<<<< HEAD
-  console.log(detailData)
-  response.status(200).render('./pages/detail', { datas: detailData });
-  // let {title, location, company, summary, url, skill} = request.body
-=======
   // console.log(detailData);
   response.status(200).render('./pages/detail', {datas: detailData});
 }
@@ -249,7 +224,6 @@ function addJobToDb(request, response) {
     })
     .catch(err => console.error(err));
 }
->>>>>>> dev-staging
 
 ////// get details from the database/////
 function findDetailsfromDB(request, response){
