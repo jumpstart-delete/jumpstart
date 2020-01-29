@@ -43,26 +43,28 @@ app.post('/status/:id', showDetailsfromDB);
 
 ///see list in the database
 app.get('/list', displayUserTable);
-app.post('/list', checkUserTable);
+// app.post('/list', checkUserTable);
 
 //update database from the status page
 app.put('/update/:id', updateJobList);
 app.delete('/status/:id', deleteJobList);
 
 // post joblist from database
-function checkUserTable(request, response) {
+function displayUserTable(request, response) {
   let sql5 =`Select * FROM ${user.username}_jobs;`;
   client.query(sql5)
-    .then(results => response.render('/list', {results: results}))
-    .catch(err => console.log('this is inside checkUserTable function failure', err));
+    .then(results => {
+      console.log('inside the checkUsertable.then', results.rows);
+      response.render('./pages/list', {results: results.rows});})
+    .catch(err => console.log('this is inside displayUserTable function failure', err));
 }
 
 
 /// render job listing from database
-function displayUserTable (request, response) {
-  console.log('inside the displayUserTable function');
-  response.render('./pages/list.ejs');
-}
+// function displayUserTable (request, response) {
+//   console.log('inside the displayUserTable function');
+//   response.render('./pages/list.ejs');
+// }
 
 ////// displayIndexpage
 function displayIndex(request, response) {

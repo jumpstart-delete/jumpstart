@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
+ <%- include('../partials/global/header')%>
 <body>
     SUCESS inside the list ejs!
-    results.forEach(tabledata => {
+    <% results.forEach(tabledata => {%>
         <li><%- tabledata.tags%></li>
         <li><%- tabledata.location%></li>
         <li><%- tabledata.title%></li>
-
-
-
-    })
-
-
-
+    <%})%>
 
 </body>
 
