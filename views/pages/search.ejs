@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include('../partials/layout/head.ejs') %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/index/index.css">
+    <title>JumpStart Job Search Engine</title>
+</head>
+
 <body>
+    <%- include('../partials/global/header.ejs') %>
     <main>
-        <%- include('../partials/layout/header.ejs') %>
-        <h1>Get a Job <%= username%>. You lazy BUM</h1>
+        <h1>Welcome <%= username%>! Let's get you hired...</h1>
         <form action="/searches/new" method="post">
             <label for="location">
-                <p>Input location to search for Job </p>
-                <input type="text" placeholder="search location" name="location" required>
+                <p>Search By Location</p>
+                <input type="text" placeholder="Search By Location" name="location" required>
             </label>
             <label for="keyword">
-                <p>Input job title to narrow down the search </p>
-                <input type="text" placeholder="job title" name="job_title">
+                <p>Search By Keyword</p>
+                <input type="text" placeholder="Search By Keyword" name="job_title">
             </label>
-                <button type='submit'>Search</button>
+            <button type='submit'>Search</button>
         </form>
     </main>
+    <%- include('../partials/global/footer.ejs') %>
 </body>
+
 </html>
