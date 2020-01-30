@@ -12,6 +12,7 @@ require('ejs');
 let azunaKey = process.env.AZUNA_API_KEY;
 let museKey = process.env.MUSE_API_KEY;
 let usaKey = process.env.USAJOBS_API_KEY;
+let email= process.env.EMAIL;
 
 // Declare lib dependencies.
 const flags = require('./lib/flags');
@@ -100,6 +101,7 @@ function registerUser(req, res) {
     username: req.body.username,
     password: req.body.password
   }
+  console.log(registerResults.password)
   let querySQL = 'SELECT * FROM users WHERE username = $1;';
   let queryValues = [registerResults.username];
   client.query(querySQL, queryValues)
@@ -162,9 +164,12 @@ function renderSearch(req, res) {
 function displayResult (request, response) {
 
   let city = request.body.location;
-  let email= process.env.EMAIL;
-
   let jobQuery = request.body.job_title;
+  let regex =/\s/gm;
+  city = city.replace(regex, '+');
+  jobQuery = jobQuery.replace(regex, '+');
+  console.log(city, jobQuery)
+
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
   let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
@@ -183,7 +188,6 @@ function displayResult (request, response) {
     .then(results => {
       let parseData = JSON.parse(results.text);
       return parseData.results.map(data => {
-        // console.log(data)
         return new Musejobsearch(data)
       })
     }) .catch(err => console.error(err))
@@ -193,22 +197,22 @@ function displayResult (request, response) {
         return new Github(value)
       })
     }) .catch(err => console.error(err));
-  // let usaJobResult = superagent.get(usaUrl)
-  //   .set({
-  //     'Host': 'data.usajobs.gov',
-  //     'User-Agent': email,
-  //     'Authorization-Key': usaKey
-  //   })
-  //   .then(results => {
-  //     let parsedData = JSON.parse(results.text)
-  //     // console.log(parsedData)
-  //     let data = parsedData.SearchResult.SearchResultItems
-  //     return data.map(value => {
-  //       return new USAJOB(value.MatchedObjectDescriptor)
-  //     })
-  //   }) .catch(err => console.error(err));
+    let usaJobResult = superagent.get(usaUrl)
+    .set({
+      'Host': 'data.usajobs.gov',
+      'User-Agent': email,
+      'Authorization-Key': usaKey
+    })
+    .then(results => {
+      let parsedData = JSON.parse(results.text)
+      // console.log(parsedData)
+      let data = parsedData.SearchResult.SearchResultItems
+      return data.map(value => {
+        return new USAJOB(value.MatchedObjectDescriptor)
+      })
+    }) .catch(err => console.error(err));
 
-  Promise.all([museResult,gitHubResult,azunaResult])
+  Promise.all([museResult,gitHubResult,azunaResult,usaJobResult])
     .then(result => { 
       let newData =result.flat(4);
       let shuffleData= newData.shuffle();
@@ -228,15 +232,24 @@ function addJobToDb(request, response) {
   // deconstruct the input
   let {title, location, summary, url, skill, company} = request.body;
   //// INCOMPLETE: check if it already exits in the database
+  let SQL10 = `SELECT * FROM ${user.username}_jobs WHERE summary = $1`;
+  let VALUE = [summary];
 
-  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, company, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
-  let safeValues = [title, url, summary, location, skill, company, 'Favorite'];
-
-  return client.query(SQL1, safeValues)
+  client.query(SQL10, VALUE)
     .then(result => {
-      response.redirect(`/status/${result.rows[0].id}`)
+      if (result.rowCount !== 0) {
+        response.redirect(`/status/${result.rows[0].id}`)
+      } else {
+        let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, company, tags) VALUES ($1, $2,   $3, $4, $5, $6, $7) RETURNING id;`;
+        let safeValues = [title, url, summary, location, skill, company, 'Favorite'];
+
+        client.query(SQL1, safeValues)
+          .then(result => {
+            response.redirect(`/status/${result.rows[0].id}`)
+          })
+          .catch(err => console.error(err));
+      }
     })
-    .catch(err => console.error(err));
 }
 
 ////// get details from the database/////
