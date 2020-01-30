@@ -17,14 +17,14 @@ const user = require('./lib/user');
 // Declare app configs.
 const app = express();
 const PORT = process.env.PORT || 3001;
-const clientConfig = {
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_DATABASE,
-  port: process.env.DATABASE_PORT,
-  ssl: process.env.DATABASE_SSL
-}
+// const clientConfig = {
+//   host: process.env.DATABASE_HOST,
+//   user: process.env.DATABASE_USER,
+//   password: process.env.DATABASE_PASSWORD,
+//   database: process.env.DATABASE_DATABASE,
+//   port: process.env.DATABASE_PORT,
+//   ssl: process.env.DATABASE_SSL
+// }
 const client = new pg.Client(process.env.DATABASE_URL);
 
 // Declare app middleware.
@@ -119,7 +119,7 @@ function registerUser(req, res) {
         client.query(newUserQuery, newUserValues)
           .then(
             client.query(newUserTable)
-              .then(results => {
+              .then(() => {
                 // console.log('this is just results', results);
                 user.username = registerResults.username;
                 console.log('this is user.username', user.username);
@@ -318,7 +318,7 @@ function USAJOB(obj) {
   this.location = obj.PositionLocationDisplay;
   obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
   obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
-  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = "undefined";
+  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = 'undefined';
   this.skill = 'Military job'
 }
 
