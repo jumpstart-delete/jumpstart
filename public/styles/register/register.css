@@ -24,27 +24,8 @@ body {
 /******************/
 /* Header Styling */
 /******************/
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 header > img {
   width: 10rem;
-  margin-left: 10%;
-}
-
-header > nav {
-  align-self: center;
-  margin-right: 10%;
-}
-
-header > nav > a {
-  margin-right: 1rem;
-  text-decoration: none;
-  font-weight: bold;
-  color: var(--jsBlue);
 }
 
 /***************************/
@@ -107,6 +88,7 @@ form > button {
 
 form > button:hover {
   cursor: pointer;
+  box-shadow: none;
 }
 
 .register-link {
@@ -150,4 +132,8 @@ footer {
 footer > p > a {
   text-decoration: none;
   color: var(--jsOrange);
+}
+
+footer > p > a:hover {
+  color: var(--jsWhite);
 }

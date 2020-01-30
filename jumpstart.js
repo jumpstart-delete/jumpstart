@@ -74,7 +74,7 @@ function logInUser(req, res) {
 }
 
 /// Display register page
-function displayRegister (request, response){
+function displayRegister(request, response) {
   response.render('./pages/register');
 }
 
@@ -110,7 +110,7 @@ function registerUser(req, res) {
         client.query(newUserQuery, newUserValues)
           .then(
             client.query(newUserTable)
-              .then(results => {
+              .then(() => {
                 user.username = registerResults.username;
                 console.log('this is user.username', user.username);
                 res.status(200).redirect('/search');
@@ -144,68 +144,61 @@ function renderSearch(req, res) {
 
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
-function displayResult (request, response) {
-  // let azunaKey = process.env.AZUNA_API_KEY;
-  // let museKey = process.env.MUSE_API_KEY;
-  // let usaKey = process.env.USAJOBS_API_KEY;
+function displayResult(request, response) {
+  let azunaKey = process.env.AZUNA_API_KEY;
+  let museKey = process.env.MUSE_API_KEY;
+  let usaKey = process.env.USAJOBS_API_KEY;
   let city = request.body.location;
-  // let email= process.env.EMAIL;
+  let email = process.env.EMAIL;
 
   let jobQuery = request.body.job_title;
-  // let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
-  // let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
-  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
-  // let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
+  let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
+  let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
+  let githubUrl = `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
+  let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
-  // let azunaResult = superagent.get(azunaUrl)
-    // .then(results => {
-      // let parsedData = (JSON.parse(results.text))
-      // return parsedData.results.map(data => {
-        // return new AzunaJobsearchs(data)
-      // });
-    // }) .catch(err => console.error(err));
+  let azunaResult = superagent.get(azunaUrl)
+    .then(results => {
+      let parsedData = (JSON.parse(results.text))
+      return parsedData.results.map(data => {
+        return new AzunaJobsearchs(data)
+      });
+    }).catch(err => console.error(err));
 
-  // let museResult = superagent.get(museUrl)
-    // .then(results => {
-      // let parseData = JSON.parse(results.text);
-      // return parseData.results.map(data => {
-        // return new Musejobsearch(data)
-      // })
-    // }) .catch(err => console.error(err))
+  let museResult = superagent.get(museUrl)
+    .then(results => {
+      let parseData = JSON.parse(results.text);
+      return parseData.results.map(data => {
+        return new Musejobsearch(data)
+      })
+    }).catch(err => console.error(err))
   let gitHubResult = superagent.get(githubUrl)
     .then(githubresults => {
       return githubresults.body.map(value => {
         return new Github(value)
       })
-    }) .catch(err => console.error(err));
-  // let usaJobResult = superagent.get(usaUrl)
-    // .set({
-      // 'Host': 'data.usajobs.gov',
-      // 'User-Agent': email,
-      // 'Authorization-Key': usaKey
-    // })
-    // .then(results => {
-      // let parsedData = JSON.parse(results.text)
-      // console.log(parsedData)
-      // let data = parsedData.SearchResult.SearchResultItems
-      // return data.map(value => {
-        // return new USAJOB(value.MatchedObjectDescriptor)
-      // })
-    // }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
+  let usaJobResult = superagent.get(usaUrl)
+    .set({
+      'Host': 'data.usajobs.gov',
+      'User-Agent': email,
+      'Authorization-Key': usaKey
+    })
+    .then(results => {
+      let parsedData = JSON.parse(results.text)
+      console.log(parsedData)
+      let data = parsedData.SearchResult.SearchResultItems
+      return data.map(value => {
+        return new USAJOB(value.MatchedObjectDescriptor)
+      })
+    }).catch(err => console.error(err));
 
-  // Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
-  //   .then(result => {
-  //     let newData =result.flat(3);
-  //     let shuffleData= newData.shuffle();
-
-  //     response.status(200).render('./pages/results', {data: shuffleData});
-  //   })
-  Promise.all([gitHubResult])
+  Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
     .then(result => {
-      // let newData =result.flat(3);
-      // let shuffleData= newData.shuffle();
+      let newData = result.flat(3);
+      let shuffleData = newData.shuffle();
 
-      response.status(200).render('./pages/results', {data: result});
+      response.status(200).render('./pages/results', { data: shuffleData });
     })
     .catch(err => console.error(err));
 }
@@ -214,12 +207,12 @@ function displayResult (request, response) {
 function displayDetail(request, response) {
   let detailData = request.body
   // console.log(detailData);
-  response.status(200).render('./pages/detail', {datas: detailData});
+  response.status(200).render('./pages/detail', { datas: detailData });
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   // deconstruct the input
-  let {title, location, summary, url, skill, company} = request.body;
+  let { title, location, summary, url, skill, company } = request.body;
   //// INCOMPLETE: check if it already exits in the database
 
   let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, company, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
@@ -233,12 +226,12 @@ function addJobToDb(request, response) {
 }
 
 ////// get details from the database/////
-function findDetailsfromDB(request, response){
+function findDetailsfromDB(request, response) {
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
   return client.query(SQL2, values)
     .then((results) => {
-      response.render('./pages/status.ejs',{results: results.rows[0]});
+      response.render('./pages/status.ejs', { results: results.rows[0] });
     })
     .catch(err => console.error(err));
 }
@@ -251,8 +244,8 @@ function showDetailsfromDB(request, response) {
 
 /////update details from the status page using middleware
 
-function updateJob (request, response) {
-  let {title, location, summary, url, skill, company, tags} = request.body;
+function updateJob(request, response) {
+  let { title, location, summary, url, skill, company, tags } = request.body;
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, company=$6, tags=$7 WHERE id=$8;`;
   let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
@@ -262,28 +255,29 @@ function updateJob (request, response) {
 }
 
 ///// delete book from the database
-function deleteJob (request,response){
+function deleteJob(request, response) {
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id]
 
   client.query(SQL4, values)
     .then(response.redirect('/list'))
     .catch(() => {
-      errorHandler ('cannot delete request here!', request, response);
+      errorHandler('cannot delete request here!', request, response);
     });
 }
 
 // post joblist from database
 function displayUserTable(request, response) {
-  let sql5 =`Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
+  let sql5 = `Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
   client.query(sql5)
     .then(results => {
-      response.render('./pages/list', {results: results.rows, username: user.username });})
+      response.render('./pages/list', { results: results.rows, username: user.username });
+    })
     .catch(err => console.log('this is inside displayUserTable function failure', err));
 }
 
 /// render job listing from database
-function updateUserTable (request, response) {
+function updateUserTable(request, response) {
   console.log('inside the updateUserTable function this is the request.body', request.body);
   console.log('this is the params id', request.params.id);
   let tags = request.body.tags;
