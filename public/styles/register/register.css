@@ -80,6 +80,8 @@ form > button {
   font-size: 1rem;
   font-weight: bold;
   color: var(--jsBlack);
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
   background-color: var(--jsOrange);
   border: 0.1rem solid var(--jsBlack);
   border-radius: 1rem;
