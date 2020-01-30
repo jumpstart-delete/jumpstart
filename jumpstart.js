@@ -34,6 +34,7 @@ app.get('/', displayIndex);
 app.post('/login', logInUser);
 app.get('/register', displayRegister);
 app.post('/register', registerUser);
+app.get('/aboutus', aboutus);
 
 // search pages and display searches
 app.get('/search', renderSearch);
@@ -45,27 +46,18 @@ app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
-///see all list from the database
+///see and edit list of jobs from the database
 app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
 app.delete('/delete/list/:id', deleteUserTable);
+
 
 //update database from the status page
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
-/// delete from the list page
-function deleteUserTable(request, response){
-  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
-  let deletedvalues = [request.params.id];
 
-  client.query(SQL6, deletedvalues)
-    .then (response.redirect('/list'))
-    .catch(err => {
-      console.log('this is error from the deleteUserTable function', err);
-    })
 
-}
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
   let loginResults = {
@@ -90,7 +82,7 @@ function logInUser(req, res) {
 }
 
 /// Display register page
-function displayRegister (request, response){
+function displayRegister(request, response) {
   response.render('./pages/register');
 }
 
@@ -127,7 +119,7 @@ function registerUser(req, res) {
         client.query(newUserQuery, newUserValues)
           .then(
             client.query(newUserTable)
-              .then(results => {
+              .then(() => {
                 user.username = registerResults.username;
                 console.log('this is user.username', user.username);
                 res.status(200).redirect('/search');
@@ -136,6 +128,10 @@ function registerUser(req, res) {
           .catch(err => console.error(err));
       }
     })
+}
+
+function aboutus(request,response) {
+  response.status(202).render('./pages/aboutus')
 }
 
 
@@ -161,8 +157,7 @@ function renderSearch(req, res) {
 
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
-function displayResult (request, response) {
-
+function displayResult(request, response) {
   let city = request.body.location;
   let jobQuery = request.body.job_title;
   let regex =/\s/gm;
@@ -172,7 +167,7 @@ function displayResult (request, response) {
 
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
-  let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
+  let githubUrl = `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
   let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
   let azunaResult = superagent.get(azunaUrl)
@@ -182,7 +177,7 @@ function displayResult (request, response) {
         // console.log(data)
         return new AzunaJobsearchs(data)
       });
-    }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
 
   let museResult = superagent.get(museUrl)
     .then(results => {
@@ -190,7 +185,7 @@ function displayResult (request, response) {
       return parseData.results.map(data => {
         return new Musejobsearch(data)
       })
-    }) .catch(err => console.error(err))
+    }).catch(err => console.error(err))
   let gitHubResult = superagent.get(githubUrl)
     .then(githubresults => {
       return githubresults.body.map(value => {
@@ -217,20 +212,20 @@ function displayResult (request, response) {
       let newData =result.flat(4);
       let shuffleData= newData.shuffle();
 
-      response.status(200).render('./pages/results', {data: shuffleData});
-    }) .catch(err => console.error(err));
+      response.status(200).render('./pages/results', { data: shuffleData });
+    }).catch(err => console.error(err));
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
   // console.log(detailData);
-  response.status(200).render('./pages/detail', {datas: detailData});
+  response.status(200).render('./pages/detail', { datas: detailData });
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   // deconstruct the input
-  let {title, location, summary, url, skill, company} = request.body;
+  let { title, location, summary, url, skill, company } = request.body;
   //// INCOMPLETE: check if it already exits in the database
   let SQL10 = `SELECT * FROM ${user.username}_jobs WHERE summary = $1`;
   let VALUE = [summary];
@@ -253,12 +248,12 @@ function addJobToDb(request, response) {
 }
 
 ////// get details from the database/////
-function findDetailsfromDB(request, response){
+function findDetailsfromDB(request, response) {
   let SQL2 = `SELECT * FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
   return client.query(SQL2, values)
     .then((results) => {
-      response.render('./pages/status.ejs',{results: results.rows[0]});
+      response.render('./pages/status.ejs', { results: results.rows[0] });
     })
     .catch(err => console.error(err));
 }
@@ -271,41 +266,41 @@ function showDetailsfromDB(request, response) {
 
 /////update details from the status page using middleware
 
-function updateJob (request, response) {
-  let {title, location, summary, url, skill, company, tags} = request.body;
+function updateJob(request, response) {
+  let { title, location, summary, url, skill, company, tags } = request.body;
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, company=$6, tags=$7 WHERE id=$8;`;
   let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
-    // .then(response.redirect(`/status/${request.params.id}`))
-    .then(response.redirect(`/list`))
+    .then(response.redirect(`/status/${request.params.id}`))
+    // .then(response.redirect(`/list`))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
 
 ///// delete book from the database
-function deleteJob (request,response){
+function deleteJob(request, response) {
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
   let values = [request.params.id];
 
   client.query(SQL4, values)
     .then(response.redirect('/list'))
     .catch(() => {
-      errorHandler ('cannot delete request here!', request, response);
+      errorHandler('cannot delete request here!', request, response);
     });
 }
 
 // post joblist from database
 function displayUserTable(request, response) {
-  let sql5 =`Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
+  let sql5 = `Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
   client.query(sql5)
     .then(results => {
-      response.render('./pages/list', {results: results.rows, username: user.username });})
+      response.render('./pages/list', { results: results.rows, username: user.username });
+    })
     .catch(err => console.log('this is inside displayUserTable function failure', err));
 }
 
 /// render job listing from database
+
 function updateUserTable (request, response) {
-  console.log('inside the updateUserTable function this is the request.body', request.body);
-  console.log('this is the params id', request.params.id);
   let tags = request.body.tags;
   let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
   let newvalues = [tags, request.params.id];
@@ -314,6 +309,18 @@ function updateUserTable (request, response) {
     .catch(error => console.error('this is inside the updateUserTable', error));
 }
 
+/// delete job from the list page
+function deleteUserTable(request, response){
+  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
+  let deletedvalues = [request.params.id];
+
+  client.query(SQL6, deletedvalues)
+    .then (response.redirect('/list'))
+    .catch(err => {
+      console.log('this is error from the deleteUserTable function', err);
+    })
+
+}
 ////// displayIndexpage
 function displayIndex(request, response) {
   response.status(200).render('./index');
