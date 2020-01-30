@@ -33,6 +33,7 @@ app.get('/', displayIndex);
 app.post('/login', logInUser);
 app.get('/register', displayRegister);
 app.post('/register', registerUser);
+app.get('/aboutus', aboutus);
 
 // search pages and display searches
 app.get('/search', renderSearch);
@@ -127,6 +128,10 @@ function registerUser(req, res) {
     })
 }
 
+function aboutus(request,response) {
+  response.status(202).render('./pages/aboutus')
+}
+
 
 ///////////RANDOMIZE////
 Array.prototype.shuffle = function () {
@@ -151,9 +156,6 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult(request, response) {
-
-  let city = request.body.location;
-  let email = process.env.EMAIL;
 
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
