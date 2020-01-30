@@ -9,6 +9,9 @@ const superagent = require('superagent');
 const methodOverride = require('method-override');
 const pg = require('pg');
 require('ejs');
+let azunaKey = process.env.AZUNA_API_KEY;
+let museKey = process.env.MUSE_API_KEY;
+let usaKey = process.env.USAJOBS_API_KEY;
 
 // Declare lib dependencies.
 const flags = require('./lib/flags');
@@ -41,15 +44,27 @@ app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
-///see list in the database
+///see all list from the database
 app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
+app.delete('/delete/list/:id', deleteUserTable);
 
 //update database from the status page
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
+/// delete from the list page
+function deleteUserTable(request, response) {
+  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
+  let deletedvalues = [request.params.id];
 
+  client.query(SQL6, deletedvalues)
+    .then(response.redirect('/list'))
+    .catch(err => {
+      console.log('this is error from the deleteUserTable function', err);
+    })
+
+}
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
   let loginResults = {
@@ -145,9 +160,7 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult(request, response) {
-  let azunaKey = process.env.AZUNA_API_KEY;
-  let museKey = process.env.MUSE_API_KEY;
-  let usaKey = process.env.USAJOBS_API_KEY;
+
   let city = request.body.location;
   let email = process.env.EMAIL;
 
@@ -161,6 +174,7 @@ function displayResult(request, response) {
     .then(results => {
       let parsedData = (JSON.parse(results.text))
       return parsedData.results.map(data => {
+        // console.log(data)
         return new AzunaJobsearchs(data)
       });
     }).catch(err => console.error(err));
@@ -169,6 +183,7 @@ function displayResult(request, response) {
     .then(results => {
       let parseData = JSON.parse(results.text);
       return parseData.results.map(data => {
+        // console.log(data)
         return new Musejobsearch(data)
       })
     }).catch(err => console.error(err))
@@ -178,29 +193,28 @@ function displayResult(request, response) {
         return new Github(value)
       })
     }).catch(err => console.error(err));
-  let usaJobResult = superagent.get(usaUrl)
-    .set({
-      'Host': 'data.usajobs.gov',
-      'User-Agent': email,
-      'Authorization-Key': usaKey
-    })
-    .then(results => {
-      let parsedData = JSON.parse(results.text)
-      console.log(parsedData)
-      let data = parsedData.SearchResult.SearchResultItems
-      return data.map(value => {
-        return new USAJOB(value.MatchedObjectDescriptor)
-      })
-    }).catch(err => console.error(err));
+  // let usaJobResult = superagent.get(usaUrl)
+  //   .set({
+  //     'Host': 'data.usajobs.gov',
+  //     'User-Agent': email,
+  //     'Authorization-Key': usaKey
+  //   })
+  //   .then(results => {
+  //     let parsedData = JSON.parse(results.text)
+  //     // console.log(parsedData)
+  //     let data = parsedData.SearchResult.SearchResultItems
+  //     return data.map(value => {
+  //       return new USAJOB(value.MatchedObjectDescriptor)
+  //     })
+  //   }) .catch(err => console.error(err));
 
-  Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
+  Promise.all([museResult, gitHubResult, azunaResult])
     .then(result => {
-      let newData = result.flat(3);
+      let newData = result.flat(4);
       let shuffleData = newData.shuffle();
 
       response.status(200).render('./pages/results', { data: shuffleData });
-    })
-    .catch(err => console.error(err));
+    }).catch(err => console.error(err));
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
@@ -257,7 +271,7 @@ function updateJob(request, response) {
 ///// delete book from the database
 function deleteJob(request, response) {
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
-  let values = [request.params.id]
+  let values = [request.params.id];
 
   client.query(SQL4, values)
     .then(response.redirect('/list'))
