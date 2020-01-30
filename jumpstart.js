@@ -41,15 +41,27 @@ app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
-///see list in the database
+///see all list from the database
 app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
+app.delete('/delete/list/:id', deleteUserTable);
 
 //update database from the status page
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
+/// delete from the list page
+function deleteUserTable(request, response){
+  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
+  let deletedvalues = [request.params.id];
 
+  client.query(SQL6, deletedvalues)
+    .then (response.redirect('/list'))
+    .catch(err => {
+      console.log('this is error from the deleteUserTable function', err);
+    })
+
+}
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
   let loginResults = {
@@ -145,69 +157,61 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult (request, response) {
-  // let azunaKey = process.env.AZUNA_API_KEY;
-  // let museKey = process.env.MUSE_API_KEY;
-  // let usaKey = process.env.USAJOBS_API_KEY;
+  let azunaKey = process.env.AZUNA_API_KEY;
+  let museKey = process.env.MUSE_API_KEY;
+  let usaKey = process.env.USAJOBS_API_KEY;
   let city = request.body.location;
-  // let email= process.env.EMAIL;
+  let email= process.env.EMAIL;
 
   let jobQuery = request.body.job_title;
-  // let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
-  // let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
+  let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
+  let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
   let githubUrl= `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
-  // let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
+  let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
-  // let azunaResult = superagent.get(azunaUrl)
-    // .then(results => {
-      // let parsedData = (JSON.parse(results.text))
-      // return parsedData.results.map(data => {
-        // return new AzunaJobsearchs(data)
-      // });
-    // }) .catch(err => console.error(err));
+  let azunaResult = superagent.get(azunaUrl)
+    .then(results => {
+      let parsedData = (JSON.parse(results.text))
+      return parsedData.results.map(data => {
+        return new AzunaJobsearchs(data)
+      });
+    }) .catch(err => console.error(err));
 
-  // let museResult = superagent.get(museUrl)
-    // .then(results => {
-      // let parseData = JSON.parse(results.text);
-      // return parseData.results.map(data => {
-        // return new Musejobsearch(data)
-      // })
-    // }) .catch(err => console.error(err))
+  let museResult = superagent.get(museUrl)
+    .then(results => {
+      let parseData = JSON.parse(results.text);
+      return parseData.results.map(data => {
+        return new Musejobsearch(data)
+      })
+    }) .catch(err => console.error(err))
   let gitHubResult = superagent.get(githubUrl)
     .then(githubresults => {
       return githubresults.body.map(value => {
         return new Github(value)
       })
     }) .catch(err => console.error(err));
-  // let usaJobResult = superagent.get(usaUrl)
-    // .set({
-      // 'Host': 'data.usajobs.gov',
-      // 'User-Agent': email,
-      // 'Authorization-Key': usaKey
-    // })
-    // .then(results => {
-      // let parsedData = JSON.parse(results.text)
-      // console.log(parsedData)
-      // let data = parsedData.SearchResult.SearchResultItems
-      // return data.map(value => {
-        // return new USAJOB(value.MatchedObjectDescriptor)
-      // })
-    // }) .catch(err => console.error(err));
-
-  // Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
-  //   .then(result => {
-  //     let newData =result.flat(3);
-  //     let shuffleData= newData.shuffle();
-
-  //     response.status(200).render('./pages/results', {data: shuffleData});
-  //   })
-  Promise.all([gitHubResult])
-    .then(result => {
-      // let newData =result.flat(3);
-      // let shuffleData= newData.shuffle();
-
-      response.status(200).render('./pages/results', {data: result});
+  let usaJobResult = superagent.get(usaUrl)
+    .set({
+      'Host': 'data.usajobs.gov',
+      'User-Agent': email,
+      'Authorization-Key': usaKey
     })
-    .catch(err => console.error(err));
+    .then(results => {
+      let parsedData = JSON.parse(results.text)
+      console.log(parsedData)
+      let data = parsedData.SearchResult.SearchResultItems
+      return data.map(value => {
+        return new USAJOB(value.MatchedObjectDescriptor)
+      })
+    }) .catch(err => console.error(err));
+
+  Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
+    .then(result => {
+      let newData =result.flat(3);
+      let shuffleData= newData.shuffle();
+
+      response.status(200).render('./pages/results', {data: shuffleData});
+    })
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
@@ -264,7 +268,7 @@ function updateJob (request, response) {
 ///// delete book from the database
 function deleteJob (request,response){
   let SQL4 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
-  let values = [request.params.id]
+  let values = [request.params.id];
 
   client.query(SQL4, values)
     .then(response.redirect('/list'))

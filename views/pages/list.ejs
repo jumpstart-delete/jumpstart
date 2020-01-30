@@ -12,32 +12,45 @@
 
     <body>
         <%- include('../partials/global/header')%>
+        <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>  
         <h3>filter by tags</h3>
         <select id="select-tag">
-            <option selected="selected" value='default'>--------------</option>
+            <option selected="selected" value='default'> All </option>
             <<option name="tag" value="favorite"> Favorite </option>
             <option name="tag" value="pending"> Pending </option>
             <option name="tag" value = "completed"> Completed </option>
         </select>
-    <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>
-    <% results.forEach(tabledata => {%>
-        <section class='<%- tabledata.tags %>'>
-        <li>This is the ID <%- tabledata.id%></li>
-        <li><%- tabledata.location%></li>
-        <li><%- tabledata.title%></li>
-        <li><%- tabledata.company%></li>
-        <li class='tag-id'><%- tabledata.tags%></li>
+    
 
-     <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
-        <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
+    <%results.forEach(tabledata => {%>
+        <section class='<%- tabledata.tags %>'>
+        <h3><%- tabledata.title%></h3>
+        <h4><%- tabledata.location%></h4>
+        <p><%- tabledata.company%></p>
+        <h4 class='tag-id'>This is the status: <%- tabledata.tags%></h4>
+
+        <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
+            <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
                 <option name="tag" value="favorite"> Favorite </option>
                 <option name="tag" value="pending"> Pending </option>
                 <option name="tag" value = "completed"> Completed </option>
-        </select> 
-    </form>
-    </section>
+            </select> 
+        </form>
+
+        <form action="<%= `delete/list/${tabledata.id}?_method=DELETE` %>" method="post">
+            <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
+            <input type='hidden' id='location' name="location" value="<%= results.location %>" required />
+            <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
+            <input type='hidden' id='url' name="url" value="<%= results.url %>" />
+            <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
+            <input type='hidden' id='company' name="company" value="<%= results.company %>" />
+            <input type="hidden" name="id" value="<%- results.id %>">
+            <button name="delete">Delete </button>
+
+        </form>
+        </section>
     <%})%>
-</body>
+    </body>
 <script src="/js/jquery.js"></script>
 <script src="/js/company.js"></script>
 </html>
