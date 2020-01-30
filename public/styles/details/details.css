@@ -1,0 +1,20 @@
+@import url('/styles/globals.css');
+
+section {
+  width: 80%;
+  margin: 1rem auto;
+  padding: 2rem;
+  background-color: var(--jsBlue);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 2rem;
+}
+
+section > h2 {
+  color: var(--jsWhite);
+}
+
+section > hr {
+  width: 60%;
+  margin: 1rem auto;
+  border: 0.05rem solid var(--jsOrange);
+}

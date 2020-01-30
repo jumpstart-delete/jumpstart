@@ -1,0 +1,27 @@
+@import url('/styles/globals.css');
+
+/******************/
+/* Header Styling */
+/******************/
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+header > img {
+  width: 10rem;
+  margin-left: 10%;
+}
+
+header > nav {
+  align-self: center;
+  margin-right: 10%;
+}
+
+header > nav > a {
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--jsBlue);
+}
