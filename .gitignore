@@ -119,8 +119,12 @@ typings/
 # Serverless directories
 .serverless
 
+# Azure Web App Deployment Data
+.deployment
+
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
+!.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

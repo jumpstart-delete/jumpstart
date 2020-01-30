@@ -17,7 +17,15 @@ const user = require('./lib/user');
 // Declare app configs.
 const app = express();
 const PORT = process.env.PORT || 3001;
-const client = new pg.Client(process.env.DATABASE_URL);
+const clientConfig = {
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_DATABASE,
+  port: process.env.DATABASE_PORT,
+  ssl: process.env.DATABASE_SSL
+}
+const client = new pg.Client(clientConfig);
 
 // Declare app middleware.
 app.set('view engine', 'ejs');
