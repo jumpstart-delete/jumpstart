@@ -45,11 +45,20 @@ app.post('/status/:id', showDetailsfromDB);
 app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
 app.delete('/delete/list/:id', deleteUserTable);
+app.get('/view/list/:id', viewdetailsUserTable);
+
 
 //update database from the status page
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
+
+// view details from the list page
+function viewdetailsUserTable(request, response) {
+  console.log('this is the request.params.id from the view detail user table', request.params.id);
+  let jobid = request.params.id;
+  response.redirect(`/status/${jobid}`);
+}
 
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
@@ -206,7 +215,6 @@ function displayResult (request, response) {
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
-  // console.log(detailData);
   response.status(200).render('./pages/detail', {datas: detailData});
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
