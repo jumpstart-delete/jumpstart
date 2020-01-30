@@ -156,7 +156,7 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult(request, response) {
-
+  let city = request.body.location;
   let jobQuery = request.body.job_title;
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
