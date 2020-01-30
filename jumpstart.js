@@ -9,6 +9,9 @@ const superagent = require('superagent');
 const methodOverride = require('method-override');
 const pg = require('pg');
 require('ejs');
+let azunaKey = process.env.AZUNA_API_KEY;
+let museKey = process.env.MUSE_API_KEY;
+let usaKey = process.env.USAJOBS_API_KEY;
 
 // Declare lib dependencies.
 const flags = require('./lib/flags');
@@ -157,9 +160,7 @@ function renderSearch(req, res) {
 
 ///////// DISPLAY SEARCH RESULTS ON RESULTS PAGE USING API KEYS//////
 function displayResult (request, response) {
-  let azunaKey = process.env.AZUNA_API_KEY;
-  let museKey = process.env.MUSE_API_KEY;
-  let usaKey = process.env.USAJOBS_API_KEY;
+
   let city = request.body.location;
   let email= process.env.EMAIL;
 
@@ -173,6 +174,7 @@ function displayResult (request, response) {
     .then(results => {
       let parsedData = (JSON.parse(results.text))
       return parsedData.results.map(data => {
+        // console.log(data)
         return new AzunaJobsearchs(data)
       });
     }) .catch(err => console.error(err));
@@ -181,6 +183,7 @@ function displayResult (request, response) {
     .then(results => {
       let parseData = JSON.parse(results.text);
       return parseData.results.map(data => {
+        // console.log(data)
         return new Musejobsearch(data)
       })
     }) .catch(err => console.error(err))
@@ -190,28 +193,28 @@ function displayResult (request, response) {
         return new Github(value)
       })
     }) .catch(err => console.error(err));
-  let usaJobResult = superagent.get(usaUrl)
-    .set({
-      'Host': 'data.usajobs.gov',
-      'User-Agent': email,
-      'Authorization-Key': usaKey
-    })
-    .then(results => {
-      let parsedData = JSON.parse(results.text)
-      console.log(parsedData)
-      let data = parsedData.SearchResult.SearchResultItems
-      return data.map(value => {
-        return new USAJOB(value.MatchedObjectDescriptor)
-      })
-    }) .catch(err => console.error(err));
+  // let usaJobResult = superagent.get(usaUrl)
+  //   .set({
+  //     'Host': 'data.usajobs.gov',
+  //     'User-Agent': email,
+  //     'Authorization-Key': usaKey
+  //   })
+  //   .then(results => {
+  //     let parsedData = JSON.parse(results.text)
+  //     // console.log(parsedData)
+  //     let data = parsedData.SearchResult.SearchResultItems
+  //     return data.map(value => {
+  //       return new USAJOB(value.MatchedObjectDescriptor)
+  //     })
+  //   }) .catch(err => console.error(err));
 
-  Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
-    .then(result => {
-      let newData =result.flat(3);
+  Promise.all([museResult,gitHubResult,azunaResult])
+    .then(result => { 
+      let newData =result.flat(4);
       let shuffleData= newData.shuffle();
 
       response.status(200).render('./pages/results', {data: shuffleData});
-    })
+    }) .catch(err => console.error(err));
 }
 
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
