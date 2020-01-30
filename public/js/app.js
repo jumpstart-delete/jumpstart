@@ -1,24 +1,24 @@
 'use strict';
 
-$('#goback').on('click', backButton)
+$('#goback').on('click', backButton);
 function backButton() {
   window.history.back();
 }
 
 let click = 0;
-let total = Math.floor(($('section').length)/6);
-console.log(total)
+// let total = Math.floor(($('section').length)/6);
+
 /////////next page/////
 
 function hideSet(num, until) {
   for (let i = num; i < until; i++) {
-    $(`.data-card${i}`).hide()
+    $(`.data-card${i}`).hide();
   }
 }
 
 function showSet(num) {
   for (let i = num; i < $('section').length; i++) {
-    $(`.data-card${i}`).show()
+    $(`.data-card${i}`).show();
   }
 }
 
