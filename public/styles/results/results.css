@@ -1,0 +1,96 @@
+@import url('/styles/globals.css');
+
+/****************************/
+/* Job Result Cards Styling */
+/****************************/
+.jobs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2rem;
+  margin: auto 2rem;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  background-color: var(--jsBlue);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--jsBlack);
+}
+
+section > h2 {
+  margin: 0.25rem;
+  font-size: 1.2rem;
+  color: var(--jsWhite);
+}
+
+section > hr {
+  width: 60%;
+  margin: 0.15rem auto;
+  border: 0.05rem solid var(--jsOrange);
+}
+
+section > p {
+  margin: 0.25rem;
+  font-size: 1rem;
+  color: var(--jsWhite);
+}
+
+section > form > button {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
+
+section > form > button:hover {
+  cursor: pointer;
+  box-shadow: none;
+}
+
+/******************************/
+/* Pagination Section Styling */
+/******************************/
+.pagination {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  min-height: fit-content;
+  margin: 1rem auto;
+  text-align: center;
+}
+
+.pagination > button {
+  margin: 0.25rem;
+  padding: 0.25rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
+
+.pagination > button:hover {
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.pagination > span {
+  display: flex;
+  flex-direction: row;
+  margin: auto 1rem;
+}
+
+.pagination > span > p {
+  margin: auto 0.25rem;
+}

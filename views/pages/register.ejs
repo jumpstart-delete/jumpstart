@@ -2,23 +2,34 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/layout/head.ejs') %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+  <link rel="stylesheet" href="/styles/register/register.css">
+  <title>JumpStart Job Search Engine</title>
 </head>
 
 <body>
+  <header>
+    <img src="/images/jumpstartlogo.png" alt="jumpstart_logo">
+  </header>
   <main>
+    <h1>Register a new account...</h1>
     <form action="/register" method="post">
-      <fieldset>
-        <label for="username"> username</label>
-        <input type="text" name="username" placeholder="username">
-        <label for="password"> password</label>
-        <input type="password" name="password" placeholder="password">
-        <button type="submit">
-          Register
-        </button>
-      </fieldset>
+      <label>
+        <span>Enter A Username</span>
+        <input type="text" name="username" placeholder="Username">
+      </label>
+      <label>
+        <span>Enter A Password</span>
+        <input type="password" name="password" placeholder="Password" minlength="8">
+      </label>
+      <button type="submit">
+        Register
+      </button>
     </form>
-
+    <%- include('../partials/global/footer.ejs') %>
   </main>
 
 </body>

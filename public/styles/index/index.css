@@ -1,0 +1,145 @@
+@import url('/styles/globals.css');
+
+/******************/
+/* Global Styling */
+/******************/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  background-color: var(--jsWhite);
+  overflow-x: hidden;
+}
+
+/******************/
+/* Header Styling */
+/******************/
+header > img {
+  width: 10rem;
+}
+
+/***************************/
+/* Primary Heading Styling */
+/***************************/
+h1 {
+  font-size: 1.6rem;
+}
+
+/**********************/
+/* Login Form Styling */
+/**********************/
+form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 1rem auto;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  color: var(--jsWhite);
+  background-color: var(--jsBlue);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--jsBlack);
+}
+
+form > label {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+form > label > span {
+  font-weight: bold;
+}
+
+form > label > input {
+  margin: 0.8rem;
+  padding: 0.25rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+form > button {
+  width: 40%;
+  margin: auto;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
+
+form > button:hover {
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.register-link {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.register-link > a {
+  text-decoration: none;
+  color: var(--jsOrange);
+}
+
+.register-link > a:hover {
+  color: var(--jsBlue);
+}
+
+.login-warning {
+  width: fit-content;
+  margin: auto;
+  margin-bottom: 1rem;
+  padding: 0.25rem;
+  font-size: 1rem;
+  color: red;
+  background-color: var(--jsWhite);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 0.5rem;
+}
+
+/******************/
+/* Footer Styling */
+/******************/
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 4rem;
+  color: var(--jsWhite);
+  background-color: var(--jsBlue);
+  border-top: 0.1rem solid var(--jsBlack);
+}
+
+footer > p > a {
+  text-decoration: none;
+  color: var(--jsOrange);
+}
+
+footer > p > a:hover {
+  color: var(--jsWhite);
+}

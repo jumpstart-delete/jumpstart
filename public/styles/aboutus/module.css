@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+    body {
+        width: 100%;
+
+    }
+
+    div {
+        display:block;
+    }
+
+    article {
+        width: 90%
+    }
+}

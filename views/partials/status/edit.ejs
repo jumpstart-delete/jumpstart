@@ -1,0 +1,20 @@
+<% let action = formAction === 'update' ? `/update/${results.id}?_method=PUT` : '/update'; %>
+
+<form action="<%= action %>" method="post">
+
+    <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
+    <input type='hidden' id='location' name="location" value="<%= results.location %>" required />
+    <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
+    <input type='hidden' id='url' name="url" value="<%= results.url %>" />
+    <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
+    <input type='hidden' id='company' name="company" value="<%= results.company %>" />
+
+
+    <select name="tags" value="<%= results.tags %>">
+        <option name="tag" value="favorite"> Favorite </option>
+        <option name="tag" value="pending"> Pending </option>
+        <option name="tag" value = "completed"> Completed </option>
+    </select> 
+    <button id='button' type='submit'> Submit </button>
+
+</form>
