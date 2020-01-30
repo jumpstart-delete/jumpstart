@@ -219,7 +219,7 @@ function displayResult (request, response) {
     }) .catch(err => console.error(err));
 
   Promise.all([azunaResult, museResult, gitHubResult, usaJobResult])
-    .then(result => {
+    .then(result => {new Promise((resolve) => setTimeout(resolve, 15000))
       let newData =result.flat(3);
       let shuffleData= newData.shuffle();
 
