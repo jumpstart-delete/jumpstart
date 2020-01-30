@@ -31,6 +31,16 @@
 
         <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
             <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
+                <option selected = "selected" value="default"> Select a tag </option>
+                <option name="tag" value="favorite"> Favorite </option>
+                <option name="tag" value="pending"> Pending </option>
+                <option name="tag" value = "completed"> Completed </option>
+            </select> 
+        </form>
+
+        <form action="/status" method="post">
+            <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
+                <option selected = "selected" value="default"> Select a tag </option>
                 <option name="tag" value="favorite"> Favorite </option>
                 <option name="tag" value="pending"> Pending </option>
                 <option name="tag" value = "completed"> Completed </option>

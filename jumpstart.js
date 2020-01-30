@@ -41,7 +41,7 @@ app.post('/status', addJobToDb);
 app.get('/status/:id', findDetailsfromDB);
 app.post('/status/:id', showDetailsfromDB);
 
-///see all list from the database
+///see and edit list of jobs from the database
 app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
 app.delete('/delete/list/:id', deleteUserTable);
@@ -50,18 +50,7 @@ app.delete('/delete/list/:id', deleteUserTable);
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
-/// delete from the list page
-function deleteUserTable(request, response){
-  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
-  let deletedvalues = [request.params.id];
 
-  client.query(SQL6, deletedvalues)
-    .then (response.redirect('/list'))
-    .catch(err => {
-      console.log('this is error from the deleteUserTable function', err);
-    })
-
-}
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
   let loginResults = {
@@ -260,8 +249,8 @@ function updateJob (request, response) {
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, company=$6, tags=$7 WHERE id=$8;`;
   let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
-    // .then(response.redirect(`/status/${request.params.id}`))
-    .then(response.redirect(`/list`))
+    .then(response.redirect(`/status/${request.params.id}`))
+    // .then(response.redirect(`/list`))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
 
@@ -288,8 +277,6 @@ function displayUserTable(request, response) {
 
 /// render job listing from database
 function updateUserTable (request, response) {
-  console.log('inside the updateUserTable function this is the request.body', request.body);
-  console.log('this is the params id', request.params.id);
   let tags = request.body.tags;
   let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
   let newvalues = [tags, request.params.id];
@@ -298,6 +285,18 @@ function updateUserTable (request, response) {
     .catch(error => console.error('this is inside the updateUserTable', error));
 }
 
+/// delete job from the list page
+function deleteUserTable(request, response){
+  let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
+  let deletedvalues = [request.params.id];
+
+  client.query(SQL6, deletedvalues)
+    .then (response.redirect('/list'))
+    .catch(err => {
+      console.log('this is error from the deleteUserTable function', err);
+    })
+
+}
 ////// displayIndexpage
 function displayIndex(request, response) {
   response.status(200).render('./index');
