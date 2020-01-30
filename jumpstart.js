@@ -49,6 +49,7 @@ app.get('/list', displayUserTable);
 app.put('/update/list/:id', updateUserTable);
 app.delete('/delete/list/:id', deleteUserTable);
 
+
 //update database from the status page
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
