@@ -49,31 +49,6 @@ app.put('/update/list/:id', updateUserTable);
 app.put('/update/:id', updateJob);
 app.delete('/status/:id', deleteJob);
 
-// post joblist from database
-function displayUserTable(request, response) {
-  let sql5 =`Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
-  client.query(sql5)
-    .then(results => {
-      response.render('./pages/list', {results: results.rows, username: user.username });})
-    .catch(err => console.log('this is inside displayUserTable function failure', err));
-}
-
-/// render job listing from database
-function updateUserTable (request, response) {
-  console.log('inside the updateUserTable function this is the request.body', request.body);
-  console.log('this is the params id', request.params.id);
-  let tags = request.body.tags;
-  let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
-  let newvalues = [tags, request.params.id];
-  return client.query(SQL5, newvalues)
-    .then(response.redirect(`/list`))
-    .catch(error => console.error('this is inside the updateUserTable', error));
-}
-
-////// displayIndexpage
-function displayIndex(request, response) {
-  response.status(200).render('./index');
-}
 
 /////// LOGIN FUNCTIONS /////////
 function logInUser(req, res) {
@@ -129,13 +104,13 @@ function registerUser(req, res) {
             summary TEXT,
             location VARCHAR(255),
             skills TEXT,
+            company VARCHAR(255),
             tags TEXT
           );`;
         client.query(newUserQuery, newUserValues)
           .then(
             client.query(newUserTable)
               .then(results => {
-                // console.log('this is just results', results);
                 user.username = registerResults.username;
                 console.log('this is user.username', user.username);
                 res.status(200).redirect('/search');
@@ -236,10 +211,11 @@ function displayDetail(request, response) {
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   // deconstruct the input
-  let {title, location, summary, url, skill} = request.body;
+  let {title, location, summary, url, skill, company} = request.body;
   //// INCOMPLETE: check if it already exits in the database
-  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, tags) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`;
-  let safeValues = [title, url, summary, location, skill, 'Favorite'];
+
+  let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, company, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
+  let safeValues = [title, url, summary, location, skill, company, 'Favorite'];
 
   return client.query(SQL1, safeValues)
     .then(result => {
@@ -268,9 +244,9 @@ function showDetailsfromDB(request, response) {
 /////update details from the status page using middleware
 
 function updateJob (request, response) {
-  let {title, location, summary, url, skill, tags} = request.body;
-  let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, tags=$6 WHERE id=$7;`;
-  let newvalues = [title, location, summary, url, skill, tags, request.params.id];
+  let {title, location, summary, url, skill, company, tags} = request.body;
+  let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, company=$6, tags=$7 WHERE id=$8;`;
+  let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
     // .then(response.redirect(`/status/${request.params.id}`))
     .then(response.redirect(`/list`))
@@ -287,6 +263,32 @@ function deleteJob (request,response){
     .catch(() => {
       errorHandler ('cannot delete request here!', request, response);
     });
+}
+
+// post joblist from database
+function displayUserTable(request, response) {
+  let sql5 =`Select * FROM ${user.username}_jobs ORDER BY tags DESC`;
+  client.query(sql5)
+    .then(results => {
+      response.render('./pages/list', {results: results.rows, username: user.username });})
+    .catch(err => console.log('this is inside displayUserTable function failure', err));
+}
+
+/// render job listing from database
+function updateUserTable (request, response) {
+  console.log('inside the updateUserTable function this is the request.body', request.body);
+  console.log('this is the params id', request.params.id);
+  let tags = request.body.tags;
+  let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
+  let newvalues = [tags, request.params.id];
+  return client.query(SQL5, newvalues)
+    .then(response.redirect(`/list`))
+    .catch(error => console.error('this is inside the updateUserTable', error));
+}
+
+////// displayIndexpage
+function displayIndex(request, response) {
+  response.status(200).render('./index');
 }
 
 /// CONSTRUCTORS FOR THE SEARCH PAGE/////////////////

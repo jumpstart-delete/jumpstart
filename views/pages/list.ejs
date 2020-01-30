@@ -9,6 +9,7 @@
                 <title>JumpStart Job Search Engine</title>
     </head>
 
+
     <body>
         <%- include('../partials/global/header')%>
         <h3>filter by tags</h3>
@@ -24,6 +25,7 @@
         <li>This is the ID <%- tabledata.id%></li>
         <li><%- tabledata.location%></li>
         <li><%- tabledata.title%></li>
+        <li><%- tabledata.company%></li>
         <li class='tag-id'><%- tabledata.tags%></li>
 
      <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
