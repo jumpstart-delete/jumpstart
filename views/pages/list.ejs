@@ -9,15 +9,24 @@
                 <title>JumpStart Job Search Engine</title>
     </head>
 
- <%- include('../partials/global/header')%>
-<body>
-    <h1>Welcome <%= username %> !! This is your JOB LIST..</h1>
+
+    <body>
+        <%- include('../partials/global/header')%>
+        <h3>filter by tags</h3>
+        <select id="select-tag">
+            <option selected="selected" value='default'>--------------</option>
+            <<option name="tag" value="favorite"> Favorite </option>
+            <option name="tag" value="pending"> Pending </option>
+            <option name="tag" value = "completed"> Completed </option>
+        </select>
+    <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>
     <% results.forEach(tabledata => {%>
+        <section class='<%- tabledata.tags %>'>
         <li>This is the ID <%- tabledata.id%></li>
         <li><%- tabledata.location%></li>
         <li><%- tabledata.title%></li>
         <li><%- tabledata.company%></li>
-        <li>This is Your TAG <%- tabledata.tags%></li>
+        <li class='tag-id'><%- tabledata.tags%></li>
 
      <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
         <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
@@ -26,10 +35,9 @@
                 <option name="tag" value = "completed"> Completed </option>
         </select> 
     </form>
-
-
+    </section>
     <%})%>
-
 </body>
-
+<script src="/js/jquery.js"></script>
+<script src="/js/company.js"></script>
 </html>

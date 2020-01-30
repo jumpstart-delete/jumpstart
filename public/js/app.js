@@ -79,3 +79,4 @@ function buttonEffect(e) {
 $('#1').css("font-weight", "bold")
 $('#hide-button').hide()
 hideSet(6, $('section').length);
+

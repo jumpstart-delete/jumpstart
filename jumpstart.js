@@ -213,8 +213,9 @@ function addJobToDb(request, response) {
   // deconstruct the input
   let {title, location, summary, url, skill, company} = request.body;
   //// INCOMPLETE: check if it already exits in the database
+
   let SQL1 = `INSERT INTO ${user.username}_jobs (title, url, summary, location, skills, company, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
-  let safeValues = [title, url, summary, location, skill, company, 'favorite'];
+  let safeValues = [title, url, summary, location, skill, company, 'Favorite'];
 
   return client.query(SQL1, safeValues)
     .then(result => {
