@@ -25,7 +25,7 @@ const clientConfig = {
   port: process.env.DATABASE_PORT,
   ssl: process.env.DATABASE_SSL
 }
-const client = new pg.Client(clientConfig);
+const client = new pg.Client(process.env.DATABASE_URL);
 
 // Declare app middleware.
 app.set('view engine', 'ejs');
