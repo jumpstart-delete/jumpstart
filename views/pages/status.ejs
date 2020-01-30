@@ -30,8 +30,8 @@
         <input type='hidden' id='tags' name="tags" value="<%= results.tags %>" />
     </section>
 
-    <%- include('edit', {formAction: 'update', results: results}) %>
-    <%- include('edit_delete', {formAction: 'delete', results: results}) %>
+    <%- include('../partials/status/edit', {formAction: 'update', results: results}) %>
+    <%- include('../partials/status/edit_delete', {formAction: 'delete', results: results}) %>
 
 
 
