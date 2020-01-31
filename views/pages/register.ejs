@@ -17,16 +17,18 @@
   <main>
     <h1>Register a new account...</h1>
     <form action="/register" method="post">
-      <fieldset>
-        <label for="username"> username</label>
-        <input type="text" name="username" placeholder="username">
-        <label for="password"> password</label>
-        <input type="password" name="password" placeholder="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+        <label for="username"> 
+          <span>Enter a Username</span>
+          <input type="text" name="username" placeholder="username">
+        </label>
+        <label for="password"> 
+          <span>Enter Password</span>
+          <input type="password" name="password" placeholder="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+        </label>
         <button type="submit" id='warning'>
           Register
         </button>
         <p>Please enter at least one number and one upper case and has to be minimum 8 characters.</p>
-      </fieldset>
     </form>
     <%- include('../partials/global/footer.ejs') %>
   </main>
