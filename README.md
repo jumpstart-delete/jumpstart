@@ -1,6 +1,6 @@
 # JumpStart
 
-**Version**: 0.1.0   
+**Version**: 1.0.0   
 **Authors**:  
 [Jin Woo Kim](https://github.com/jinwoov)  
 [Vijayeta Rangarajan](https://github.com/vijayetar)  
@@ -11,7 +11,6 @@
 Jumpstart is a mobile-friendly, responsive web app that enables users to search for job postings in USA. New users are required to register to the app with a username and unique 8-character password that is kept encrypted in the database. Returning users can login to the app with their unique username and password.  User can search by location and job title / keyword. They have ability to save their favorite jobs in a unique data table and can update the postings to either pending status, completed or even delete them from their table. 
 
 ## Getting Started
--------------------REVIEW-(START)--------------
 
 Text here to describe how to install/build and/or use our application.
 
@@ -40,13 +39,13 @@ https://jumpstartcf.herokuapp.com/.
 
 ## Change Log  
 
-v0.1.0  CSS completed   
-v0.0.7  LOGIN page password strength 
-v0.0.6  ALL Saved JOB Listings with options to update and delete  
-v0.0.4  VIEW DETAILS Page
-v0.0.3  RESULTS Page 
-v0.0.2  SEARCH Page 
-v0.0.1  LOGIN Page
+v0.1.0  1/30   CSS completed   
+v0.0.7  1/30   LOGIN page password strength 
+v0.0.6  1/29  ALL Saved JOB Listings with options to update and delete    
+v0.0.4  1/29  VIEW DETAILS Page
+v0.0.3  1/28  RESULTS Page 
+v0.0.2  1/27  SEARCH Page 
+v0.0.1  1/27  LOGIN Page
 
 -------------------REVIEW-(END)--------------
 
