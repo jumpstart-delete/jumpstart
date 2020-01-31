@@ -174,7 +174,6 @@ function displayResult(request, response) {
     .then(results => {
       let parsedData = (JSON.parse(results.text))
       return parsedData.results.map(data => {
-        // console.log(data)
         return new AzunaJobsearchs(data)
       });
     }).catch(err => console.error(err));
@@ -192,7 +191,7 @@ function displayResult(request, response) {
         return new Github(value)
       })
     }) .catch(err => console.error(err));
-    let usaJobResult = superagent.get(usaUrl)
+  let usaJobResult = superagent.get(usaUrl)
     .set({
       'Host': 'data.usajobs.gov',
       'User-Agent': email,
@@ -200,7 +199,6 @@ function displayResult(request, response) {
     })
     .then(results => {
       let parsedData = JSON.parse(results.text)
-      // console.log(parsedData)
       let data = parsedData.SearchResult.SearchResultItems
       return data.map(value => {
         return new USAJOB(value.MatchedObjectDescriptor)
@@ -208,7 +206,7 @@ function displayResult(request, response) {
     }) .catch(err => console.error(err));
 
   Promise.all([museResult,gitHubResult,azunaResult,usaJobResult])
-    .then(result => { 
+    .then(result => {
       let newData =result.flat(4);
       let shuffleData= newData.shuffle();
 
@@ -219,14 +217,12 @@ function displayResult(request, response) {
 ///////// DISPLAY DETAIL OF JOB ON DETAIL PAGE///////////
 function displayDetail(request, response) {
   let detailData = request.body
-  // console.log(detailData);
   response.status(200).render('./pages/detail', { datas: detailData });
 }
 /////// ADDING SELECTED JOB TO DATABASE/////
 function addJobToDb(request, response) {
   // deconstruct the input
   let { title, location, summary, url, skill, company } = request.body;
-  //// INCOMPLETE: check if it already exits in the database
   let SQL10 = `SELECT * FROM ${user.username}_jobs WHERE summary = $1`;
   let VALUE = [summary];
 
@@ -272,7 +268,6 @@ function updateJob(request, response) {
   let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
     .then(response.redirect(`/status/${request.params.id}`))
-    // .then(response.redirect(`/list`))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
 
