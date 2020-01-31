@@ -9,8 +9,13 @@ h3 {
 
 #select-tag {
   width: 20%;
+  height: 2rem;
   margin: auto;
+  font-size: 1rem;
+  border: 1px solid black;
+  text-decoration: none;
 }
+
 
 section {
   width: 80%;
@@ -32,9 +37,26 @@ section > a:hover {
   color: var(--jsWhite);
 }
 
+section > h2 {
+  margin: 0.3rem;
+  font-size: 1.2rem;
+  color: var(--jsWhite);
+}
+
+section > hr {
+  width: 60%;
+  margin: 0.15rem auto;
+  border: 0.05rem solid var(--jsOrange);
+}
+
 section > p {
   margin: 0.25rem;
+  font-size: 1.2rem;
   color: var(--jsWhite);
+}
+
+.title {
+  text-transform: uppercase;
 }
 
 section > form > button {
@@ -55,4 +77,11 @@ section > form > button {
 section > form > button:hover {
   cursor: pointer;
   box-shadow: none;
+}
+
+form > select {
+  height: 1.5rem;
+  font-size: 1 rem;
+  width: 15%;
+  background-color: whitesmoke;
 }

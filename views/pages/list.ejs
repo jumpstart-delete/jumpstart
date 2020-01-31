@@ -27,14 +27,17 @@
         </select>
 
 
-        <%results.forEach(tabledata => {%>
-        <section class='<%- tabledata.tags %>'>
-            <a href="/status/<%=tabledata.id %>">
-                <h3><%- tabledata.title%></h3>
-            </a>
-            <p><%- tabledata.location%></p>
-            <p><%- tabledata.company%></p>
-            <p class='tag-id'>This is the status: <%- tabledata.tags%></p>
+
+    <%results.forEach(tabledata => {%>
+    <section class='<%- tabledata.tags %>'>
+        <a href="/status/<%=tabledata.id %>">
+            <h2 class="title"><%- tabledata.title%></h2>
+        </a>
+        <hr>
+        <p><%- tabledata.location%></p>
+        <p><%- tabledata.company%></p>
+        <p class='tag-id'>This is the status: <%- tabledata.tags%></p>
+
 
             <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
                 <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
