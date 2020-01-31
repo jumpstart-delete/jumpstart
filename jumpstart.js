@@ -191,21 +191,21 @@ function displayResult(request, response) {
         return new Github(value)
       })
     }) .catch(err => console.error(err));
-  let usaJobResult = superagent.get(usaUrl)
-    .set({
-      'Host': 'data.usajobs.gov',
-      'User-Agent': email,
-      'Authorization-Key': usaKey
-    })
-    .then(results => {
-      let parsedData = JSON.parse(results.text)
-      let data = parsedData.SearchResult.SearchResultItems
-      return data.map(value => {
-        return new USAJOB(value.MatchedObjectDescriptor)
-      })
-    }) .catch(err => console.error(err));
+  // let usaJobResult = superagent.get(usaUrl)
+  //   .set({
+  //     'Host': 'data.usajobs.gov',
+  //     'User-Agent': email,
+  //     'Authorization-Key': usaKey
+  //   })
+  //   .then(results => {
+  //     let parsedData = JSON.parse(results.text)
+  //     let data = parsedData.SearchResult.SearchResultItems
+  //     return data.map(value => {
+  //       return new USAJOB(value.MatchedObjectDescriptor)
+  //     })
+  //   }) .catch(err => console.error(err));
 
-  Promise.all([museResult,gitHubResult,azunaResult,usaJobResult])
+  Promise.all([museResult,gitHubResult,azunaResult])
     .then(result => {
       let newData =result.flat(4);
       let shuffleData= newData.shuffle();
