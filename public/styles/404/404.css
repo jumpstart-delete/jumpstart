@@ -1,0 +1,29 @@
+h1 {
+  margin: 2rem auto;
+  font-size: 4rem;
+  color: var(--jsBlue);
+}
+
+p {
+  font-size: 1.2rem;
+}
+
+button {
+  width: 40%;
+  margin: 2rem auto;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
+
+button:hover {
+  cursor: pointer;
+  box-shadow: none;
+}
