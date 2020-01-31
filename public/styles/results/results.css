@@ -99,6 +99,12 @@ section > form > button:hover {
   .jobs {
     display: flex;
     flex-direction: column;
+    width: 80%;
     margin: 2rem auto;
+  }
+
+  section {
+    width: 100%;
+    margin: 1rem auto;
   }
 }
