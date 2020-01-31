@@ -4,6 +4,7 @@
 /* Footer Styling */
 /******************/
 footer {
+  align-self: flex-end;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
