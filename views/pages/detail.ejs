@@ -13,10 +13,12 @@
 </head>
 
 <body>
-    <%- include('../partials/global/header.ejs') %>
-    <%- include('../partials/layout/details_view.ejs') %>
-    <button id='goback'>Go back</button>
-    <%- include('../partials/global/footer.ejs') %>
+    <div class="wrapper">
+        <%- include('../partials/global/header.ejs') %>
+        <%- include('../partials/layout/details_view.ejs') %>
+        <button id='goback'>Back To Search Results</button>
+        <%- include('../partials/global/footer.ejs') %>
+    </div>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/js/app.js"></script>
 </body>

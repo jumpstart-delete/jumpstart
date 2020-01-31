@@ -13,12 +13,13 @@
 </head>
 
 <body>
+
     <%- include('../partials/global/header.ejs') %>
     <main class='new-data'>
         <div class="jobs">
             <% data.forEach((datas,idx) => { %>
             <section class="data-card<%=idx%>">
-                <h2><%- datas.title %></h2>
+                <h2 class="title"><%- datas.title %></h2>
                 <hr>
                 <p>Location: <%- datas.location %></p>
                 <p>Company: <%- datas.company %></p>
@@ -45,6 +46,7 @@
         </div>
     </main>
     <%- include('../partials/global/footer.ejs') %>
+
     <script src="/js/jquery.js"></script>
     <script src="/js/app.js"></script>
 </body>

@@ -94,3 +94,17 @@ section > form > button:hover {
 .pagination > span > p {
   margin: auto 0.25rem;
 }
+
+@media (max-width: 768px) {
+  .jobs {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 2rem auto;
+  }
+
+  section {
+    width: 100%;
+    margin: 1rem auto;
+  }
+}

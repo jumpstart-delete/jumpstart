@@ -1,41 +1,29 @@
-@import url('/styles/globals.css');
-@import url('https://fonts.googleapis.com/css?family=Cormorant+Garamond&display=swap');
-
 section {
   width: 80%;
   margin: 1rem auto;
   padding: 2rem;
+  text-align: left;
   color: var(--jsWhite);
   background-color: var(--jsBlue);
   border: 0.1rem solid var(--jsBlack);
   border-radius: 2rem;
-  font-family: 'Cormorant Garamond', serif;
-  text-align: left;
-  line-height: 1.2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--jsBlack);
 }
 
 section > h2 {
+  margin: 1rem;
   text-align: center;
-  color: var(--jsOrange);
 }
 
-section > p {
-  margin-bottom: 1rem;
-}
-
-section > p > a {
+.job-url {
+  line-height: 2rem;
   text-decoration: none;
+  font-size: 1.2rem;
   color: var(--jsOrange);
 }
 
-section > p > span {
-  font-weight: bold;
-}
-
-section > hr {
-  width: 60%;
-  margin: 1rem auto;
-  border: 0.05rem solid var(--jsOrange);
+.job-url:hover {
+  color: var(--jsWhite);
 }
 
 section > a {
@@ -43,10 +31,14 @@ section > a {
   color: var(--jsOrange);
 }
 
-button {
-  width: 40%;
-  margin: auto;
-  margin-bottom: 2rem;
+select {
+  width: 15%;
+}
+
+form > button {
+  display: block;
+  width: 20%;
+  margin: 1rem auto;
   padding: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
@@ -57,13 +49,4 @@ button {
   border: 0.1rem solid var(--jsBlack);
   border-radius: 1rem;
   box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
-}
-
-button:hover {
-  cursor: pointer;
-  box-shadow: none;
-}
-
-form {
-  text-align: center;
 }
