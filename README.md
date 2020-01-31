@@ -69,6 +69,22 @@ v0.0.1  LOGIN Page
 
 ## Features of the app  
 
+**Register new user and login features**
+- Login for returning user with their unique password.  
+- Hashing password with pgcrypto extension and saving it in the users table.  
+- Password limits with 8 characters minimum, with one upper Case, one digit and one lower case minimum using Regex.   
+- Creating separate users-table for each user in the same database.  
+
+**Search Page**
+- Uses 4 API keys from four different database to narrow search to location and keyword
+- Use Promise.all to resolve multiple promises  
+- Shuffle data to shuffle the job search to present it across multiple pages  
+
+
+
+
 
 ## Functions used in the app
 ## References
+* [ShuffleData](https://www.kirupa.com/html5/shuffling_array_js.htm)
+
