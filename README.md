@@ -40,14 +40,13 @@ https://jumpstartcf.herokuapp.com/.
 ## Change Log  
 
 v0.1.0  1/30   CSS completed   
-v0.0.7  1/30   LOGIN page password strength 
-v0.0.6  1/29  ALL Saved JOB Listings with options to update and delete    
-v0.0.4  1/29  VIEW DETAILS Page
-v0.0.3  1/28  RESULTS Page 
-v0.0.2  1/27  SEARCH Page 
-v0.0.1  1/27  LOGIN Page
+v0.0.7  1/30   LOGIN page password strength   
+v0.0.6  1/29  ALL Saved JOB Listings with options to update and delete      
+v0.0.4  1/29  VIEW DETAILS Page  
+v0.0.3  1/28  RESULTS Page   
+v0.0.2  1/27  SEARCH Page   
+v0.0.1  1/27  LOGIN Page  
 
--------------------REVIEW-(END)--------------
 
 ## Domain Model
 ![domain model](domain.jpg)
@@ -74,16 +73,25 @@ v0.0.1  1/27  LOGIN Page
 - Password limits with 8 characters minimum, with one upper Case, one digit and one lower case minimum using Regex.   
 - Creating separate users-table for each user in the same database.  
 
-**Search Page**
+**Search Page and Results Page**
 - Uses 4 API keys from four different database to narrow search to location and keyword
 - Use Promise.all to resolve multiple promises  
-- Shuffle data to shuffle the job search to present it across multiple pages  
+- Shuffle data to shuffle the job search to present it across multiple pages   
+
+**View Details**  
+- Renders details for each job selected  
+- Save to database from the details page   OR   
+- Return to the results page  
+
+**List Details**  
+- Renders all jobs from the database - Filter jobs based on status
+- Update job status  
+- Delete job from the list  
 
 
+## Functions used in the app   
 
 
-
-## Functions used in the app
 ## References
 * [ShuffleData](https://www.kirupa.com/html5/shuffling_array_js.htm)
 
