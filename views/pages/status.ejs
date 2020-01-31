@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
-    <link rel="stylesheet" href="/styles/results/results.css">
+    <link rel="stylesheet" href="/styles/status/status.css">
     <link rel="stylesheet" href="/styles/global/header-template.css">
     <link rel="stylesheet" href="/styles/global/footer-template.css">
     <title>JumpStart Job Search Engine</title>
@@ -14,14 +14,11 @@
 
 <body>
     <%- include('../partials/global/header.ejs') %>
-
     <section class="status-data">
-
-
         <h2><%- results.title %></h2>
+        <a class="job-url" href="<%- results.url %>" target="_blank">Apply Now!</a>
         <p><%- results.location %></p>
         <p><%- results.summary %></p>
-        <a href="<%- results.url %>" target="_blank">URL of job</a>
         <p><%- results.skills %></p>
         <p>You have tagged the job as: <%- results.tags %></p>
         <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
@@ -32,12 +29,9 @@
         <input type='hidden' id='company' name="company" value="<%= results.company %>" />
         <input type='hidden' id='tags' name="tags" value="<%= results.tags %>" />
     </section>
-
     <%- include('../partials/status/edit', {formAction: 'update', results: results}) %>
     <%- include('../partials/status/edit_delete', {formAction: 'delete', results: results}) %>
-
-
-
+    <%- include('../partials/global/footer.ejs') %>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="/js/app.js"></script>
 </body>

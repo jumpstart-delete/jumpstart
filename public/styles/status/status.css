@@ -1,0 +1,52 @@
+section {
+  width: 80%;
+  margin: 1rem auto;
+  padding: 2rem;
+  text-align: left;
+  color: var(--jsWhite);
+  background-color: var(--jsBlue);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--jsBlack);
+}
+
+section > h2 {
+  margin: 1rem;
+  text-align: center;
+}
+
+.job-url {
+  line-height: 2rem;
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: var(--jsOrange);
+}
+
+.job-url:hover {
+  color: var(--jsWhite);
+}
+
+section > a {
+  text-decoration: none;
+  color: var(--jsOrange);
+}
+
+select {
+  width: 15%;
+}
+
+form > button {
+  display: block;
+  width: 20%;
+  margin: 1rem auto;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
