@@ -12,6 +12,8 @@ Jumpstart is a mobile-friendly, responsive web app that enables users to search 
 
 ## Getting Started
 
+Text here to describe how to install/build and/or use our application.
+
 * The app an be accessed through the link:
 https://jumpstartcf.herokuapp.com/.  
 
