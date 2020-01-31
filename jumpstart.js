@@ -11,8 +11,8 @@ const pg = require('pg');
 require('ejs');
 let azunaKey = process.env.AZUNA_API_KEY;
 let museKey = process.env.MUSE_API_KEY;
-let usaKey = process.env.USAJOBS_API_KEY;
-let email= process.env.EMAIL;
+// let usaKey = process.env.USAJOBS_API_KEY;
+// let email= process.env.EMAIL;
 
 // Declare lib dependencies.
 const flags = require('./lib/flags');
@@ -130,7 +130,7 @@ function registerUser(req, res) {
     })
 }
 
-function aboutus(request,response) {
+function aboutus(request, response) {
   response.status(202).render('./pages/aboutus')
 }
 
@@ -160,7 +160,7 @@ function renderSearch(req, res) {
 function displayResult(request, response) {
   let city = request.body.location;
   let jobQuery = request.body.job_title;
-  let regex =/\s/gm;
+  let regex = /\s/gm;
   city = city.replace(regex, '+');
   jobQuery = jobQuery.replace(regex, '+');
   console.log(city, jobQuery)
@@ -168,7 +168,7 @@ function displayResult(request, response) {
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
   let githubUrl = `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
-  let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
+  // let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
 
   let azunaResult = superagent.get(azunaUrl)
     .then(results => {
@@ -190,25 +190,25 @@ function displayResult(request, response) {
       return githubresults.body.map(value => {
         return new Github(value)
       })
-    }) .catch(err => console.error(err));
-  let usaJobResult = superagent.get(usaUrl)
-    .set({
-      'Host': 'data.usajobs.gov',
-      'User-Agent': email,
-      'Authorization-Key': usaKey
-    })
-    .then(results => {
-      let parsedData = JSON.parse(results.text)
-      let data = parsedData.SearchResult.SearchResultItems
-      return data.map(value => {
-        return new USAJOB(value.MatchedObjectDescriptor)
-      })
-    }) .catch(err => console.error(err));
+    }).catch(err => console.error(err));
+  // let usaJobResult = superagent.get(usaUrl)
+  //   .set({
+  //     'Host': 'data.usajobs.gov',
+  //     'User-Agent': email,
+  //     'Authorization-Key': usaKey
+  //   })
+  // .then(results => {
+  //   let parsedData = JSON.parse(results.text)
+  //   let data = parsedData.SearchResult.SearchResultItems
+  //   return data.map(value => {
+  //     return new USAJOB(value.MatchedObjectDescriptor)
+  //   })
+  // }) .catch(err => console.error(err));
 
-  Promise.all([museResult,gitHubResult,azunaResult,usaJobResult])
+  Promise.all([museResult, gitHubResult, azunaResult])
     .then(result => {
-      let newData =result.flat(4);
-      let shuffleData= newData.shuffle();
+      let newData = result.flat(4);
+      let shuffleData = newData.shuffle();
 
       response.status(200).render('./pages/results', { data: shuffleData });
     }).catch(err => console.error(err));
@@ -295,7 +295,7 @@ function displayUserTable(request, response) {
 
 /// render job listing from database
 
-function updateUserTable (request, response) {
+function updateUserTable(request, response) {
   let tags = request.body.tags;
   let SQL5 = `UPDATE ${user.username}_jobs SET tags=$1 WHERE id=$2;`;
   let newvalues = [tags, request.params.id];
@@ -305,12 +305,12 @@ function updateUserTable (request, response) {
 }
 
 /// delete job from the list page
-function deleteUserTable(request, response){
+function deleteUserTable(request, response) {
   let SQL6 = `DELETE FROM ${user.username}_jobs WHERE id=$1;`;
   let deletedvalues = [request.params.id];
 
   client.query(SQL6, deletedvalues)
-    .then (response.redirect('/list'))
+    .then(response.redirect('/list'))
     .catch(err => {
       console.log('this is error from the deleteUserTable function', err);
     })
@@ -355,14 +355,14 @@ function Github(obj) {
 }
 
 ///////////constructor for USAjob/////
-function USAJOB(obj) {
-  obj.PositionTitle !== undefined ? this.title = obj.PositionTitle : this.title = 'title is unavailable';
-  this.location = obj.PositionLocationDisplay;
-  obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
-  obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
-  obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = 'undefined';
-  this.skill = 'Military job'
-}
+// function USAJOB(obj) {
+//   obj.PositionTitle !== undefined ? this.title = obj.PositionTitle : this.title = 'title is unavailable';
+//   this.location = obj.PositionLocationDisplay;
+//   obj.OrganizationName !== undefined ? this.company = obj.OrganizationName : this.company = 'undefined';
+//   obj.QualificationSummary !== undefined ? this.summary = obj.QualificationSummary : this.summary = 'undefined'
+//   obj.ApplyURI !== undefined ? this.url = obj.ApplyURI : this.url = 'undefined';
+//   this.skill = 'Military job'
+// }
 
 /////////////////// Error handler////////////////
 app.get('*', notFoundHandler);
