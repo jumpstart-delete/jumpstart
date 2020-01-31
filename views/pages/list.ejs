@@ -29,8 +29,9 @@
     <%results.forEach(tabledata => {%>
     <section class='<%- tabledata.tags %>'>
         <a href="/status/<%=tabledata.id %>">
-            <h3><%- tabledata.title%></h3>
+            <h2 class="title"><%- tabledata.title%></h2>
         </a>
+        <hr>
         <p><%- tabledata.location%></p>
         <p><%- tabledata.company%></p>
         <p class='tag-id'>This is the status: <%- tabledata.tags%></p>
