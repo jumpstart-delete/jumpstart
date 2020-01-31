@@ -68,10 +68,8 @@ function logInUser(req, res) {
   let safeValues = [loginResults.username, loginResults.password];
   client.query(SQL, safeValues)
     .then(result => {
-      console.log(req.body);
       if (result.rowCount === 1) {
         user.username = result.rows[0].username;
-        console.log(user.username);
         res.redirect('/list');
       } else {
         flags.loginFail = true;
@@ -93,12 +91,10 @@ function registerUser(req, res) {
     username: req.body.username,
     password: req.body.password
   }
-  console.log(registerResults.password)
   let querySQL = 'SELECT * FROM users WHERE username = $1;';
   let queryValues = [registerResults.username];
   client.query(querySQL, queryValues)
     .then(results => {
-      console.log(req.body)
       if (results.rowCount !== 0) {
         console.log('User already exists!');
       }
@@ -121,7 +117,6 @@ function registerUser(req, res) {
             client.query(newUserTable)
               .then(() => {
                 user.username = registerResults.username;
-                console.log('this is user.username', user.username);
                 res.status(200).redirect('/search');
               })
           )
@@ -163,7 +158,6 @@ function displayResult(request, response) {
   let regex =/\s/gm;
   city = city.replace(regex, '+');
   jobQuery = jobQuery.replace(regex, '+');
-  console.log(city, jobQuery)
 
   let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
