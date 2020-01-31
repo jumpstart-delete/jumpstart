@@ -159,7 +159,7 @@ function displayResult(request, response) {
   city = city.replace(regex, '+');
   jobQuery = jobQuery.replace(regex, '+');
 
-  let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=9b8fb405&app_key=${azunaKey}&where=${city}&what=$${jobQuery}`;
+  let azunaUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=8ac23d2e&app_key=${azunaKey}&where=${city}&what=${jobQuery}`;
   let museUrl = `https://www.themuse.com/api/public/jobs?location=${city}&page=1&descending=true&api_key=${museKey}`;
   let githubUrl = `https://jobs.github.com/positions.json?description=${jobQuery}&location=${city}`;
   // let usaUrl = `https://data.usajobs.gov/api/search?Keyword=${jobQuery}&LocationName=${city}`
@@ -262,7 +262,7 @@ function updateJob(request, response) {
   let SQL3 = `UPDATE ${user.username}_jobs SET title=$1, location=$2, summary=$3, url=$4, skills=$5, company=$6, tags=$7 WHERE id=$8;`;
   let newvalues = [title, location, summary, url, skill, company, tags, request.params.id];
   return client.query(SQL3, newvalues)
-    .then(response.redirect(`/status/${request.params.id}`))
+    .then(response.redirect('/list'))
     .catch(error => console.error('this is inside the updateJobList', error));
 }
 
