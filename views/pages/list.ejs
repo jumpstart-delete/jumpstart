@@ -14,16 +14,18 @@
 
 
 <body>
-    <%- include('../partials/global/header')%>
-    <h1>Welcome <%= username %>!</h1>
-    <h2>Here are your saved jobs...</h2>
-    <h3>filter by tags</h3>
-    <select id="select-tag">
-        <option selected="selected" value='default'> All </option>
-        <<option name="tag" value="favorite"> Favorite </option>
-            <option name="tag" value="pending"> Pending </option>
-            <option name="tag" value="completed"> Completed </option>
-    </select>
+    <div class="wrapper">
+        <%- include('../partials/global/header')%>
+        <h1>Welcome <%= username %>!</h1>
+        <h2>Here are your saved jobs...</h2>
+        <h3>filter by tags</h3>
+        <select id="select-tag">
+            <option selected="selected" value='default'> All </option>
+            <<option name="tag" value="Favorite"> Favorite </option>
+                <option name="tag" value="pending"> Pending </option>
+                <option name="tag" value="completed"> Completed </option>
+        </select>
+
 
 
     <%results.forEach(tabledata => {%>
@@ -36,28 +38,30 @@
         <p><%- tabledata.company%></p>
         <p class='tag-id'>This is the status: <%- tabledata.tags%></p>
 
-        <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
-            <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
-                <option selected="selected" value="default"> Update Status </option>
-                <option name="tag" value="favorite"> Favorite </option>
-                <option name="tag" value="pending"> Pending </option>
-                <option name="tag" value="completed"> Completed </option>
-            </select>
-        </form>
 
-        <form action="<%= `delete/list/${tabledata.id}?_method=DELETE` %>" method="post">
-            <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
-            <input type='hidden' id='location' name="location" value="<%= results.location %>" required />
-            <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
-            <input type='hidden' id='url' name="url" value="<%= results.url %>" />
-            <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
-            <input type='hidden' id='company' name="company" value="<%= results.company %>" />
-            <input type="hidden" name="id" value="<%- results.id %>">
-            <button name="delete">Delete </button>
-        </form>
-    </section>
-    <%})%>
-    <%- include('../partials/global/footer.ejs') %>
+            <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
+                <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
+                    <option selected="selected" value="default"> Update Status </option>
+                    <option name="tag" value="favorite"> Favorite </option>
+                    <option name="tag" value="pending"> Pending </option>
+                    <option name="tag" value="completed"> Completed </option>
+                </select>
+            </form>
+
+            <form action="<%= `delete/list/${tabledata.id}?_method=DELETE` %>" method="post">
+                <input type='hidden' id='title' name="title" value="<%= results.title %>" required />
+                <input type='hidden' id='location' name="location" value="<%= results.location %>" required />
+                <input type='hidden' id='summary' name="summary" value="<%= results.summary %>" />
+                <input type='hidden' id='url' name="url" value="<%= results.url %>" />
+                <input type='hidden' id='skill' name="skill" value="<%= results.skills %>" />
+                <input type='hidden' id='company' name="company" value="<%= results.company %>" />
+                <input type="hidden" name="id" value="<%- results.id %>">
+                <button name="delete">Delete </button>
+            </form>
+        </section>
+        <%})%>
+        <%- include('../partials/global/footer.ejs') %>
+    </div>
 </body>
 <script src="/js/jquery.js"></script>
 <script src="/js/company.js"></script>

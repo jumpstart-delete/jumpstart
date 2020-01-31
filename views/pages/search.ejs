@@ -12,22 +12,24 @@
 </head>
 
 <body>
-    <%- include('../partials/global/header.ejs') %>
-    <main>
-        <h1>Hi, <%= username%> ! Let's get you hired...</h1>
-        <form action="/searches/new" method="post">
-            <label for="location">
-                <p>Search By Location</p>
-                <input type="text" placeholder="Search By Location" name="location" required>
-            </label>
-            <label for="keyword">
-                <p>Search By Keyword</p>
-                <input type="text" placeholder="Search By Keyword" name="job_title">
-            </label>
-            <button type='submit'>Search</button>
-        </form>
-    </main>
-    <%- include('../partials/global/footer.ejs') %>
+    <div class="wrapper">
+        <%- include('../partials/global/header.ejs') %>
+        <main>
+            <h1>Hi, <%= username%> ! Let's get you hired...</h1>
+            <form action="/searches/new" method="post">
+                <label for="location">
+                    <p>Search By Location</p>
+                    <input type="text" placeholder="Search By Location" name="location" required>
+                </label>
+                <label for="keyword">
+                    <p>Search By Keyword</p>
+                    <input type="text" placeholder="Search By Keyword" name="job_title">
+                </label>
+                <button type='submit'>Search</button>
+            </form>
+        </main>
+        <%- include('../partials/global/footer.ejs') %>
+    </div>
 </body>
 
 </html>

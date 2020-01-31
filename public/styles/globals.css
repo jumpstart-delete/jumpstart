@@ -21,15 +21,32 @@
   box-sizing: border-box;
 }
 
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  position: relative;
+}
+
 html {
   width: 100vw;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   text-align: center;
   background-color: var(--jsWhite);
   overflow-x: hidden;
+}
+
+.wrapper {
+  min-height: 100vh;
+  overflow: hidden;
+  display: block;
+  position: relative;
+  padding-bottom: 4rem;
 }
