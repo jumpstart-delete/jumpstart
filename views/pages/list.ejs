@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
-                <link rel="stylesheet" href="/styles/index/index.css">
-                <title>JumpStart Job Search Engine</title>
-    </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/list/list.css">
+    <link rel="stylesheet" href="/styles/global/header-template.css">
+    <link rel="stylesheet" href="/styles/global/footer-template.css">
+    <title>JumpStart Job Search Engine</title>
+</head>
 
 
-    <body>
-        <%- include('../partials/global/header')%>
-        <h1>Welcome <%= username %>!! This is your JOB LIST..</h1>  
-        <h3>filter by tags</h3>
-        <select id="select-tag">
-            <option selected="selected" value='default'> All </option>
-            <<option name="tag" value="favorite"> Favorite </option>
+<body>
+    <%- include('../partials/global/header')%>
+    <h1>Welcome <%= username %>!</h1>
+    <h2>Here are your saved jobs...</h2>
+    <h3>filter by tags</h3>
+    <select id="select-tag">
+        <option selected="selected" value='default'> All </option>
+        <<option name="tag" value="favorite"> Favorite </option>
             <option name="tag" value="pending"> Pending </option>
-            <option name="tag" value = "completed"> Completed </option>
-        </select>
-    
+            <option name="tag" value="completed"> Completed </option>
+    </select>
+
 
     <%results.forEach(tabledata => {%>
-        <section class='<%- tabledata.tags %>'>
-        <a href="/status/<%=tabledata.id %>"><h3><%- tabledata.title%></h3></a>
-        <h4><%- tabledata.location%></h4>
+    <section class='<%- tabledata.tags %>'>
+        <a href="/status/<%=tabledata.id %>">
+            <h3><%- tabledata.title%></h3>
+        </a>
+        <p><%- tabledata.location%></p>
         <p><%- tabledata.company%></p>
-        <h4 class='tag-id'>This is the status: <%- tabledata.tags%></h4>
+        <p class='tag-id'>This is the status: <%- tabledata.tags%></p>
 
         <form action="<%= `update/list/${tabledata.id}?_method=PUT` %>" method="post">
             <select onchange="this.form.submit()" name="tags" value="<%= tabledata.tags %>">
-                <option selected = "selected" value="default"> Update Status </option>
+                <option selected="selected" value="default"> Update Status </option>
                 <option name="tag" value="favorite"> Favorite </option>
                 <option name="tag" value="pending"> Pending </option>
-                <option name="tag" value = "completed"> Completed </option>
-            </select> 
+                <option name="tag" value="completed"> Completed </option>
+            </select>
         </form>
 
         <form action="<%= `delete/list/${tabledata.id}?_method=DELETE` %>" method="post">
@@ -47,11 +53,12 @@
             <input type='hidden' id='company' name="company" value="<%= results.company %>" />
             <input type="hidden" name="id" value="<%- results.id %>">
             <button name="delete">Delete </button>
-
         </form>
-        </section>
+    </section>
     <%})%>
-    </body>
+    <%- include('../partials/global/footer.ejs') %>
+</body>
 <script src="/js/jquery.js"></script>
 <script src="/js/company.js"></script>
+
 </html>

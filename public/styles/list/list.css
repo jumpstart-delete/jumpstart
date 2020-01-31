@@ -1,0 +1,58 @@
+h1 {
+  margin: 1rem;
+}
+
+h2,
+h3 {
+  margin: 0.5rem;
+}
+
+#select-tag {
+  width: 20%;
+  margin: auto;
+}
+
+section {
+  width: 80%;
+  margin: 1rem auto;
+  padding: 1rem;
+  background-color: var(--jsBlue);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 2rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--jsBlack);
+}
+
+section > a {
+  margin: 0.5rem;
+  text-decoration: none;
+  color: var(--jsOrange);
+}
+
+section > a:hover {
+  color: var(--jsWhite);
+}
+
+section > p {
+  margin: 0.25rem;
+  color: var(--jsWhite);
+}
+
+section > form > button {
+  min-width: 20%;
+  margin: 1rem auto 0.25rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--jsBlack);
+  background-color: var(--jsOrange);
+  border: 0.1rem solid var(--jsBlack);
+  border-radius: 1rem;
+  box-shadow: 0.25rem 0.25rem 0.25rem var(--jsBlack);
+}
+
+section > form > button:hover {
+  cursor: pointer;
+  box-shadow: none;
+}
